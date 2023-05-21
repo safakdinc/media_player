@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'TPF Yolk Bold';
+  src: url('../fonts/Nexa-Black.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Code Next Book';
+  src: url('../fonts/Nexa-Book.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Fester Bold';
+  src: url('../fonts/Fester-bold.otf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
