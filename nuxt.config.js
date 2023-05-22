@@ -13,7 +13,10 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/vuex'
   ],
-  modules: ['@vueuse/motion/nuxt'],
+  modules: ['@vueuse/motion/nuxt', 'nuxt-headlessui'],
+  headlessui: {
+    prefix: 'Headless'
+  },
   css: ['~/assets/css/main.css', '@fortawesome/fontawesome-svg-core/styles.css'],
   postcss: {
     plugins: {

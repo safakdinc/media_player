@@ -1,10 +1,10 @@
 <template>
   <div class="w-full flex flex-col gap-5 p-2">
     <div
-      v-for="item in items"
+      v-for="(item, index) in items"
       class="w-full h-14 flex items-center gap-2 pr-2 pb-1 border-b hover-link cursor-pointer rounded-md"
       style="border-color: rgba(197, 197, 197, 0.4)"
-      @click="playAudio()">
+      @click="playAudio(index)">
       <div class="h-full w-16">
         <img
           class="w-full h-full object-center object-cover rounded-sm"
@@ -22,25 +22,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
+
 const store = useStore();
 
-const emits = defineEmits(['playAudio']);
+const items = [
+  {
+    src: '@/assets/example.mp3'
+  },
+  {
+    src: '@/assets/strange.mp3'
+  }
+];
 
-const items = ['1'];
-
-const audioRef = ref(null);
-function playAudio() {
-  store.commit('togglePlaying');
-  /*//audioRef.value.play();
-  console.log(audioRef.value);
-  if (audioRef.value.paused) {
-    audioRef.value.play();
-  } else {
-    audioRef.value.pause();
-  } */
+async function playAudio(index) {
+  const audioModule = await import(items[index].src);
+  const audio = audioModule.default;
+  store.commit('setPlayingNow', audio);
+  const currentAudio = computed(() => store.state.playingNow);
+  console.log(currentAudio.value);
 }
 </script>
 

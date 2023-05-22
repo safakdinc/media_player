@@ -14,19 +14,18 @@
     <!--Footer-->
     <div class="w-full h-28 sticky bottom-0 flex flex-col justify-start p-1 gap-1 text-[aliceblue]">
       <div class="w-full h-4 flex text-xs items-center gap-2 px-1">
-        <div>00:00:00</div>
-        <div class="flex-grow">
-          <div
-            class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"
-            id="progressBarContainer"
-            ref="progressBarContainer">
-            <div
-              id="progressBar"
-              class="bg-blue-600 h-2.5 rounded-full progressBar"
-              style="width: 0%"></div>
-          </div>
+        <div v-html="elapsedTime()"></div>
+        <div class="flex-grow flex items-center">
+          <input
+            v-model="playbackTime"
+            type="range"
+            min="0"
+            :max="audioDuration"
+            class="slider w-full h-full"
+            id="position"
+            name="position" />
         </div>
-        <div>00:05:59</div>
+        <div v-html="totalTime()"></div>
       </div>
       <div class="flex-grow flex gap-2 justify-start">
         <!-- Name and thumbnail -->
@@ -39,84 +38,94 @@
           <div class="h-full w-full flex items-center p-2 text-white"></div>
         </div>
         <div class="flex-grow flex-1">
-          <div class="h-full w-full">
-            <div id="audio-player-root">
-              <!-- Hide the default audio player -->
-              <div>
-                <audio style="display: none" ref="player" id="player">
-                  <source src="@/assets/example.mp3" type="audio/ogg" />
-                </audio>
-              </div>
-
-              <div
-                class="w-3/4 bg-gray-200 border border-gray-300 px-2 pt-2 mt-4 shadow-md"
-                style="margin: auto">
-                <div id="player-row" class="inline-flex flex-wrap w-full max-w-5xl">
-                  <div id="button-div" class="flex-initial pr-3">
-                    <svg
-                      @click="toggleAudio"
-                      v-show="!isPlaying"
-                      class="play-button text-gray-400"
-                      :class="{
-                        'text-orange-600': audioLoaded,
-                        'hover:text-orange-400': audioLoaded,
-                        'cursor-pointer': audioLoaded
-                      }"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                        clip-rule="evenodd" />
-                    </svg>
-                    <svg
-                      @click="toggleAudio"
-                      v-show="isPlaying"
-                      class="play-button text-orange-400 hover:text-orange-400 cursor-pointer"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor">
-                      <path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </div>
-
-                  <div id="progress-bar" class="flex-grow bg-white border border-blue-200">
-                    <div class="overlay-container relative w-full h-full">
-                      <input
-                        v-model="playbackTime"
-                        type="range"
-                        min="0"
-                        :max="audioDuration"
-                        class="slider w-full h-full"
-                        id="position"
-                        name="position" />
-
-                      <div
-                        v-show="!audioLoaded"
-                        class="w-full absolute top-0 bottom-0 right-0 left-0 px-2 pointer-events-none"
-                        style="color: #94bcec">
-                        Loading please wait...
-                      </div>
-
-                      <div
-                        v-show="audioLoaded"
-                        class="flex w-full justify-between absolute top-0 bottom-0 right-0 left-0 px-2 pointer-events-none">
-                        <span class="text-sm" style="color: #94bcec" v-html="elapsedTime()"></span>
-                        <span class="text-sm" style="color: #94bcec" v-html="totalTime()"></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div class="h-full w-full flex justify-center items-center gap-3">
+            <!-- Hide the default audio player -->
+            <div>
+              <audio style="display: none" ref="player" id="player">
+                <source src="@/assets/strange.mp3" type="audio/ogg" />
+              </audio>
             </div>
+            <font-awesome :icon="['fas', 'backward-step']" class="text-xl"></font-awesome>
+            <div v-if="showButtons">
+              <svg
+                @click="toggleAudio"
+                v-if="!isPlaying"
+                class="play-button text-gray-400"
+                :class="{
+                  'text-orange-600': audioLoaded,
+                  'hover:text-orange-400': audioLoaded,
+                  'cursor-pointer': audioLoaded
+                }"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                  clip-rule="evenodd" />
+              </svg>
+              <svg
+                @click="toggleAudio"
+                v-else
+                class="play-button text-orange-400 hover:text-orange-400 cursor-pointer"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+
+            <font-awesome :icon="['fas', 'forward-step']" class="text-xl"></font-awesome>
           </div>
         </div>
         <div class="flex-grow flex-1">
-          <div class="h-full w-full"></div>
+          <div class="h-full w-full flex justify-end items-center gap-3 pr-3">
+            <Popover class="relative">
+              <PopoverButton
+                ><font-awesome :icon="['fas', 'volume-high']" class="text-xl cursor-pointer"
+              /></PopoverButton>
+              <transition
+                enter-active-class="transition duration-200 ease-out"
+                enter-from-class="translate-y-10 opacity-0"
+                enter-to-class="translate-y-0 opacity-100"
+                leave-active-class="transition duration-150 ease-in"
+                leave-from-class="translate-y-0 opacity-100"
+                leave-to-class="translate-y-10 opacity-0">
+                <PopoverPanel
+                  class="w-72 h-8 bg-gray-800 p-3 rounded-md flex items-center absolute bottom-14 right-0 z-10">
+                  <div class="flex-grow flex items-center gap-2">
+                    <div
+                      v-if="showButtons"
+                      class="w-7 h-full flex items-center justify-center cursor-pointer hover:text-orange-400"
+                      style="transition: color 0.2s ease"
+                      @click="muteAudio">
+                      <font-awesome
+                        v-if="volumeValue == 0 || audioMuted"
+                        :icon="['fas', 'volume-xmark']" />
+                      <font-awesome
+                        v-else-if="volumeValue > 0 && volumeValue < 50"
+                        :icon="['fas', 'volume-low']" />
+                      <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']" />
+                    </div>
+                    <input
+                      v-model="volumeValue"
+                      type="range"
+                      min="0"
+                      max="100"
+                      @input="setVolume"
+                      class="slider w-full h-full"
+                      id="position"
+                      name="position" />
+                    <div class="text-sm w-7 flex justify-center">{{ volumeValue }}</div>
+                  </div>
+                </PopoverPanel>
+              </transition>
+            </Popover>
+            <font-awesome :icon="['fas', 'ellipsis']" class="text-xl cursor-pointer" />
+          </div>
         </div>
       </div>
     </div>
@@ -124,22 +133,48 @@
 </template>
 
 <script setup>
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
-import interact from 'interactjs';
 
 import { useStore } from 'vuex';
-const store = useStore();
 
-const deneme = () => {
-  return 'aaa';
-};
+const showButtons = ref(false);
+onMounted(async () => {
+  setTimeout(() => {
+    showButtons.value = true;
+    window.addEventListener('keydown', event => {
+      if (event.code === 'Space') {
+        toggleAudio();
+      }
+    });
+  }, 10);
+});
 
+const audioMuted = ref(false);
+const volumeValue = ref(50);
 const playbackTime = ref(0);
 const audioDuration = ref(100);
 const audioLoaded = ref(true);
 const isPlaying = ref(false);
 let listenerActive = false;
 const player = ref(null);
+
+const setVolume = () => {
+  let audio = player.value;
+  if (audio) {
+    audio.volume = volumeValue.value / 100;
+  }
+};
+const muteAudio = () => {
+  let audio = player.value;
+  if (audio && audio.muted == false) {
+    audioMuted.value = false;
+    audio.muted = true;
+  } else {
+    audioMuted.value = true;
+    audio.muted = false;
+  }
+};
 
 const convertTime = seconds => {
   const format = val => `0${Math.floor(val)}`.slice(-2);
@@ -245,7 +280,6 @@ nextTick(() => {
     });
     audio.addEventListener('canplay', () => {
       audioLoaded.value = true;
-      console.log('canplay');
     });
   }
 });
@@ -283,6 +317,7 @@ input[type='range'] {
   position: relative;
   overflow: hidden;
   width: 100%;
+  height: 5px;
   cursor: pointer;
   outline: none;
   border-radius: 0; /* iOS */
