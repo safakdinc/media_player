@@ -11,6 +11,7 @@ use serde::{ Serialize, Deserialize };
 use std::io::{ Write, Read };
 use anyhow::{ Result, Context };
 use chrono::{ DateTime, Local, serde::ts_seconds, Utc };
+use std::path::Path;
 
 #[derive(Serialize, Deserialize)]
 struct MediaEntry {
@@ -134,6 +135,30 @@ fn add_latest_tracks(path: String) -> Result<String, String> {
 
     Ok(format!("Written, file => {}", &LATEST_TRACK_PATH))
 }
+
+// #[tauri::command]
+// fn get_media(path: String) -> Result<String, String> {
+//     let file_path = Path::new(path.to_string());
+//     match Tag::new().read_from_path(file_path) {
+//         Ok(tag) => {
+//             if let Some(title) = tag.title() {
+//                 println!("Title: {}", title);
+//             }
+//             if let Some(artist) = tag.artist() {
+//                 println!("Artist: {}", artist);
+//             }
+//             if let Some(album) = tag.album() {
+//                 println!("Album: {}", album);
+//             }
+//             // Extract other metadata fields as needed
+//             println!("{:?}", tag);
+//         }
+//         Err(err) => {
+//             eprintln!("Failed to read audio file metadata: {}", err);
+//         }
+//     }
+//     Ok(())
+// }
 
 fn main() {
     tauri::Builder
