@@ -85,9 +85,13 @@
           <div class="h-full w-full flex justify-end items-center gap-3 pr-3">
             <Popover class="relative">
               <PopoverButton
-                ><font-awesome :icon="['fas', 'volume-high']" class="text-xl cursor-pointer"
+                ><font-awesome
+                  :icon="['fas', 'volume-high']"
+                  class="text-xl cursor-pointer"
+                  @click="setVolume_2"
               /></PopoverButton>
               <transition
+                @enter="setVolume_enter"
                 enter-active-class="transition duration-200 ease-out"
                 enter-from-class="translate-y-10 opacity-0"
                 enter-to-class="translate-y-0 opacity-100"
@@ -102,15 +106,14 @@
                       class="w-8 h-full flex items-center justify-center cursor-pointer hover:text-orange-400"
                       style="transition: color 0.2s ease"
                       @click="muteAudio">
-                      <font-awesome
-                        v-if="volumeValue == 0 || audioMuted"
-                        :icon="['fas', 'volume-xmark']" />
+                      <font-awesome v-if="volumeValue == 0" :icon="['fas', 'volume-xmark']" />
+                      <font-awesome v-else-if="audioMuted" :icon="['fas', 'volume-xmark']" />
                       <font-awesome
                         v-else-if="volumeValue > 0 && volumeValue < 50"
                         :icon="['fas', 'volume-low']" />
                       <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']" />
                     </div>
-                    <div class="h-full w-64 flex items-center">
+                    <div class="h-full w-64 flex items-center volumeSlider">
                       <input
                         v-model="volumeValue"
                         type="range"
@@ -166,16 +169,27 @@ const player = ref(null);
 const setVolume = () => {
   let audio = player.value;
   if (audio) {
+    let element = document.querySelector('.volumeSlider');
+    element.style.setProperty('--before-width', `${volumeValue.value}%`);
+    audioMuted.value = false;
+    audio.muted = false;
     audio.volume = volumeValue.value / 100;
+  }
+};
+const setVolume_enter = () => {
+  let audio = player.value;
+  if (audio) {
+    let element = document.querySelector('.volumeSlider');
+    element.style.setProperty('--before-width', `${volumeValue.value}%`);
   }
 };
 const muteAudio = () => {
   let audio = player.value;
   if (audio && audio.muted == false) {
-    audioMuted.value = false;
+    audioMuted.value = true;
     audio.muted = true;
   } else {
-    audioMuted.value = true;
+    audioMuted.value = false;
     audio.muted = false;
   }
 };
@@ -338,6 +352,20 @@ input[type='range'] {
   z-index: -1;
   width: var(--before-width);
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+  background-color: #f50;
+}
+.volumeSlider {
+  position: relative;
+}
+.volumeSlider::before {
+  content: '';
+  height: 100%;
+  width: var(--before-width);
+  z-index: 10;
   position: absolute;
   top: 0;
   left: 0;
