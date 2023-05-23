@@ -1,6 +1,8 @@
 <template>
-  <div class="w-full overflow-auto">
-    <div class="w-full sticky top-0 left-0 flex items-center h-24 gap-5 text-[aliceblue]">
+  <div class="w-full">
+    <div
+      class="w-full flex items-center h-24 gap-5 text-[aliceblue] sticky top-0 left-0 z-10"
+      style="background-color: rgb(5, 14, 22)">
       <div class="text-4xl font-fester font-bold">Müzik</div>
       <div class="flex items-center gap-5 links">
         <nuxt-link v-for="(item, index) in items" :to="item.path" @click="switchPage(index)">

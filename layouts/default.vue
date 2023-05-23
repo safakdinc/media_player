@@ -85,10 +85,7 @@
           <div class="h-full w-full flex justify-end items-center gap-3 pr-3">
             <Popover class="relative">
               <PopoverButton
-                ><font-awesome
-                  :icon="['fas', 'volume-high']"
-                  class="text-xl cursor-pointer"
-                  @click="setVolume_2"
+                ><font-awesome :icon="['fas', 'volume-high']" class="text-xl cursor-pointer"
               /></PopoverButton>
               <transition
                 @enter="setVolume_enter"
@@ -363,6 +360,7 @@ input[type='range'] {
 }
 .volumeSlider::before {
   content: '';
+  pointer-events: none;
   height: 100%;
   width: var(--before-width);
   z-index: 10;
@@ -405,17 +403,13 @@ input[type='range']::-moz-range-thumb:hover {
 
 <style>
 ::-webkit-scrollbar {
-  width: 2px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #212121;
+  width: 5px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
+  border-radius: 3px;
 }
 
 /* Handle on hover */

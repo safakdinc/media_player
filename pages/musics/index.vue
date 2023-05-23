@@ -17,7 +17,7 @@
       <div class="ml-auto">Bilinmeyen Tarz</div>
       <div class="ml-auto">05:00</div>
     </div>
-    <div class="w-full h-12"></div>
+    <div class="w-full p-5 h-[100vh] overflow-auto"></div>
   </div>
 </template>
 
@@ -35,14 +35,6 @@ const items = [
     src: '@/assets/strange.mp3'
   }
 ];
-
-async function playAudio(index) {
-  const audioModule = await import(items[index].src);
-  const audio = audioModule.default;
-  store.commit('setPlayingNow', audio);
-  const currentAudio = computed(() => store.state.playingNow);
-  console.log(currentAudio.value);
-}
 </script>
 
 <style scoped>
