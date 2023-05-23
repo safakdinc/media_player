@@ -15,7 +15,7 @@
     <div class="w-full h-28 sticky bottom-0 flex flex-col justify-start p-1 gap-1 text-[aliceblue]">
       <div class="w-full h-4 flex text-xs items-center gap-2 px-1">
         <div v-html="elapsedTime()"></div>
-        <div class="flex-grow flex items-center">
+        <div class="flex-grow flex items-center slider">
           <input
             v-model="playbackTime"
             type="range"
@@ -95,11 +95,11 @@
                 leave-from-class="translate-y-0 opacity-100"
                 leave-to-class="translate-y-10 opacity-0">
                 <PopoverPanel
-                  class="w-72 h-8 bg-gray-800 p-3 rounded-md flex items-center absolute bottom-14 right-0 z-10">
+                  class="h-8 bg-gray-800 p-3 rounded-md flex items-center absolute bottom-14 right-0 z-10">
                   <div class="flex-grow flex items-center gap-2">
                     <div
                       v-if="showButtons"
-                      class="w-7 h-full flex items-center justify-center cursor-pointer hover:text-orange-400"
+                      class="w-8 h-full flex items-center justify-center cursor-pointer hover:text-orange-400"
                       style="transition: color 0.2s ease"
                       @click="muteAudio">
                       <font-awesome
@@ -110,15 +110,17 @@
                         :icon="['fas', 'volume-low']" />
                       <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']" />
                     </div>
-                    <input
-                      v-model="volumeValue"
-                      type="range"
-                      min="0"
-                      max="100"
-                      @input="setVolume"
-                      class="slider w-full h-full"
-                      id="position"
-                      name="position" />
+                    <div class="h-full w-64 flex items-center">
+                      <input
+                        v-model="volumeValue"
+                        type="range"
+                        min="0"
+                        max="100"
+                        @input="setVolume"
+                        class="w-full h-full"
+                        id="position"
+                        name="position" />
+                    </div>
                     <div class="text-sm w-7 flex justify-center">{{ volumeValue }}</div>
                   </div>
                 </PopoverPanel>
@@ -135,6 +137,8 @@
 <script setup>
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { Vue3Lottie } from 'vue3-lottie';
+import 'vue3-lottie/dist/style.css';
 
 import { useStore } from 'vuex';
 
@@ -151,7 +155,7 @@ onMounted(async () => {
 });
 
 const audioMuted = ref(false);
-const volumeValue = ref(50);
+const volumeValue = ref(100);
 const playbackTime = ref(0);
 const audioDuration = ref(100);
 const audioLoaded = ref(true);
@@ -196,7 +200,10 @@ const totalTime = () => {
 const elapsedTime = () => {
   const audio = player.value;
   if (audio) {
-    const seconds = audio.currentTime;
+    let seconds = audio.currentTime;
+    let element = document.querySelector('.slider');
+    let ratio = (seconds / audio.duration) * 100;
+    element.style.setProperty('--before-width', `${ratio}%`);
     return convertTime(seconds);
   } else {
     return '00:00';
@@ -310,82 +317,61 @@ nextTick(() => {
 .play-button {
   height: 45px;
 }
-
 input[type='range'] {
+  z-index: 1;
   margin: auto;
   -webkit-appearance: none;
+  appearance: none;
   position: relative;
-  overflow: hidden;
   width: 100%;
   height: 5px;
   cursor: pointer;
   outline: none;
-  border-radius: 0; /* iOS */
-  background: transparent;
+  border-radius: 5px; /* iOS */
+  background: white;
+}
+.slider {
+  position: relative;
+}
+.slider::before {
+  content: '';
+  z-index: -1;
+  width: var(--before-width);
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+  background-color: #f50;
 }
 
-input[type='range']:focus {
-  outline: none;
-}
-
-::-webkit-slider-runnable-track {
-  background: #fff;
-}
-
-/* 1. Set to 0 width and remove border for a slider without a thumb */
-::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 0; /* 1 */
-  height: 40px;
-  background: #fff;
-  box-shadow: -100vw 0 0 100vw dodgerblue;
-  border: none; /* 2px solid #999; */
-}
-
-::-moz-range-track {
-  height: 40px;
-  background: #ddd;
-}
-
-::-moz-range-thumb {
-  background: #fff;
-  height: 40px;
-  width: 0; /* 20px; */
-  border: none; /* 3px solid #999; */
-  border-radius: 0 !important;
-  box-shadow: -100vw 0 0 100vw dodgerblue;
-  box-sizing: border-box;
-}
-
-::-ms-fill-lower {
-  background: dodgerblue;
-}
-
-::-ms-thumb {
-  background: #fff;
-  border: 2px solid #999;
-  height: 40px;
-  width: 20px;
-  box-sizing: border-box;
-}
-
-::-ms-ticks-after {
-  display: none;
-}
-
-::-ms-ticks-before {
-  display: none;
-}
-
-::-ms-track {
-  background: #ddd;
-  color: transparent;
-  height: 40px;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  background-color: #f50;
+  border-radius: 50%;
   border: none;
+
+  transition: 0.2s ease-in-out;
 }
 
-::-ms-tooltip {
-  display: none;
+input[type='range']::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #f50;
+  border-radius: 50%;
+  border: none;
+  transition: 0.2s ease-in-out;
+}
+
+input[type='range']::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255, 85, 0, 0.4);
+}
+
+input[type='range']::-moz-range-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255, 85, 0, 0.4);
 }
 </style>
 
