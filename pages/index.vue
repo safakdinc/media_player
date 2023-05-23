@@ -4,17 +4,21 @@
       <div class="text-4xl font-fester font-bold">Giriş</div>
     </div>
     <div class="w-full text-white">
-      <div style="font-family: Verdana, Geneva, Tahoma, sans-serif">Son Medya</div>
+      <div style="font-family: Verdana, Geneva, Tahoma, sans-serif">
+        Son Medya
+      </div>
       <div class="w-full h-auto flex flex-wrap gap-3 p-5">
         <div
           v-for="item in items"
-          class="h-72 w-48 flex flex-col gap-1 transition duration-200 hover:bg-slate-700 rounded-lg p-1 hover-icons">
+          class="h-72 w-48 flex flex-col gap-1 transition duration-200 hover:bg-slate-700 rounded-lg p-1 hover-icons"
+        >
           <div class="relative h-4/6 w-full">
             <!-- Image -->
             <div class="h-full w-full bg-slate-500 rounded-lg object-contain">
               <img
                 class="object-cover w-full h-full object-center rounded-lg image"
-                src="../assets/photos/mctonight.png" />
+                src="../assets/photos/mctonight.png"
+              />
             </div>
             <!-- Checkbox -->
             <div class="absolute top-1 left-1 icons cursor-pointer">
@@ -42,29 +46,43 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { invoke } from "@tauri-apps/api/tauri";
+onMounted(() => {
+  invoke("get_latest_tracks").then((response) => {
+    console.log(response);
+  });
+  // for (let i = 0; i < 35; i++) {
+  //   invoke("add_latest_tracks", { path: `/oqwkeok/qoekwqokew${i}.mp3` }).then(
+  //     (response) => {
+  //       console.log(response);
+  //     }
+  //   );
+  // } ekleme testi
+});
+
 const items = [
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '10',
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '10'
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
 ];
 </script>
 
@@ -89,13 +107,13 @@ const items = [
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .font-fester {
-  font-family: 'Fester Bold', sans-serif;
+  font-family: "Fester Bold", sans-serif;
 }
 .font-yolk {
-  font-family: 'TPF Yolk Bold', sans-serif;
+  font-family: "TPF Yolk Bold", sans-serif;
 }
 .font-code-next {
-  font-family: 'Code Next Book', sans-serif;
+  font-family: "Code Next Book", sans-serif;
 }
 </style>
 <style src="@/assets/css/fonts.css"></style>
