@@ -7,7 +7,7 @@
         <SideNav></SideNav>
       </div>
       <!-- Main Content -->
-      <div class="w-full p-3">
+      <div class="w-full p-3 pt-0 overflow-x-hidden">
         <slot></slot>
       </div>
     </div>
