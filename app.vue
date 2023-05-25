@@ -16,12 +16,12 @@
 }
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-100%);
+  transform: translateY(-200px);
 }
 
 .page-enter-from {
   opacity: 0;
-  transform: translateY(100%);
+  transform: translateY(200px);
 }
 .page-enter-to {
   opacity: 1;

@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/vuex'
   ],
-  modules: ['@vueuse/motion/nuxt', 'nuxt-headlessui'],
+  modules: ['@vueuse/motion/nuxt', 'nuxt-headlessui', '@nuxt/devtools', '@nuxtjs/fontaine'],
   headlessui: {
     prefix: 'Headless'
   },

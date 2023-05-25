@@ -98,3 +98,4 @@ onMounted(async () => {
 }
 </style>
 <style src="@/assets/css/fonts.css"></style>
+<style src="@/assets/css/page-transitions.css"></style>
