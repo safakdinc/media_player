@@ -2,11 +2,12 @@
   <div class="w-full h-auto flex flex-wrap gap-3 p-5">
     <div v-for="group in sortedItems" class="w-full flex flex-wrap">
       <div
-        class="w-full text-xl sticky top-24 cursor-pointer"
+        class="w-full flex text-xl sticky top-24"
         style="z-index: 2; background-color: rgb(5, 14, 22)"
-        @click="toggleSelector"
         :id="group.letter">
-        {{ group.letter }}
+        <div class="cursor-pointer" @click="toggleSelector">
+          {{ group.letter }}
+        </div>
       </div>
       <NuxtLink
         :to="`/musics/artists/${item}`"
@@ -65,7 +66,10 @@ const selectorOn = ref(false);
 const scrollToLetter = item => {
   selectorOn.value = false;
   let element = document.getElementById(item);
-  element.scrollIntoView({ behavior: 'smooth' });
+  window.scrollTo({
+    top: element.scrollTop,
+    behavior: 'smooth'
+  });
 };
 
 const toggleSelector = () => {

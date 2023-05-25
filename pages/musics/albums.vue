@@ -4,7 +4,7 @@
       <div
         class="w-full sticky top-24 pb-3 text-2xl"
         style="z-index: 2; background-color: rgb(5, 14, 22)">
-        {{ item.name }}
+        <div>{{ item.name }}</div>
       </div>
       <div
         v-for="subitem in item.items"
@@ -84,3 +84,4 @@ const items = [
 }
 </style>
 <style src="@/assets/css/fonts.css"></style>
+<style scoped src="@/assets/css/page-transitions.css"></style>

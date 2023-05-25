@@ -17,12 +17,11 @@
       <div class="ml-auto">Bilinmeyen Tarz</div>
       <div class="ml-auto">05:00</div>
     </div>
-    <div class="w-full p-5 h-[100vh] overflow-auto"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -63,3 +62,4 @@ const items = [
   transform-origin: bottom left;
 }
 </style>
+<style scoped src="@/assets/css/page-transitions.css"></style>

@@ -11,20 +11,6 @@
 
 <script setup>
 import { ref } from 'vue';
-const items = ref([
-  {
-    text: 'Müzikler',
-    path: '/musics'
-  },
-  {
-    text: 'Albümler',
-    path: '/musics/albums'
-  },
-  {
-    text: 'Sanatçılar',
-    path: '/musics/artists'
-  }
-]);
 </script>
 
 <style scoped></style>

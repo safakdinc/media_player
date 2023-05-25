@@ -7,27 +7,19 @@
         <SideNav></SideNav>
       </div>
       <!-- Main Content -->
-      <div class="w-full p-3">
+      <div class="w-full p-3 pt-0 overflow-x-hidden">
         <slot></slot>
       </div>
     </div>
     <!--Footer-->
     <div class="w-full h-28 sticky bottom-0 flex flex-col justify-start p-1 gap-1 text-[aliceblue]">
-      <div class="w-full h-4 flex text-xs items-center gap-2 px-1">
-        <div v-html="elapsedTime()"></div>
-        <div class="flex-grow flex items-center slider">
-          <input
-            v-model="playbackTime"
-            type="range"
-            min="0"
-            :max="audioDuration"
-            class="slider w-full h-full"
-            id="position"
-            name="position" />
-        </div>
-        <div v-html="totalTime()"></div>
-      </div>
-      <div class="flex-grow flex gap-2 justify-start">
+      <TimeSlider
+        v-model="playbackTime"
+        :playbackTime="playbackTime"
+        :audio-duration="audioDuration"
+        @update="updateTime" />
+
+      <div class="flex-grow flex justify-start">
         <!-- Name and thumbnail -->
         <div class="flex-grow flex gap-2 flex-1">
           <div class="h-full w-32">
@@ -38,14 +30,21 @@
           <div class="h-full w-full flex items-center p-2 text-white"></div>
         </div>
         <div class="flex-grow flex-1">
-          <div class="h-full w-full flex justify-center items-center gap-3">
+          <div class="h-full w-full flex justify-center items-center gap-1">
             <!-- Hide the default audio player -->
             <div>
               <audio style="display: none" ref="player" id="player">
                 <source src="@/assets/strange.mp3" type="audio/ogg" />
               </audio>
             </div>
-            <font-awesome :icon="['fas', 'backward-step']" class="text-xl"></font-awesome>
+            <div class="icons-button flex justify-center items-center cursor-pointer">
+              <font-awesome :icon="['fas', 'shuffle']" class="text-xl cursor-pointer" />
+            </div>
+            <div class="icons-button flex justify-center items-center cursor-pointer">
+              <font-awesome
+                :icon="['fas', 'backward-step']"
+                class="text-xl cursor-pointer"></font-awesome>
+            </div>
             <div v-if="showButtons">
               <svg
                 @click="toggleAudio"
@@ -78,15 +77,27 @@
               </svg>
             </div>
 
-            <font-awesome :icon="['fas', 'forward-step']" class="text-xl"></font-awesome>
+            <div class="icons-button flex justify-center items-center cursor-pointer">
+              <font-awesome
+                :icon="['fas', 'forward-step']"
+                class="text-xl cursor-pointer"></font-awesome>
+            </div>
+            <div class="icons-button flex justify-center items-center cursor-pointer">
+              <font-awesome :icon="['fas', 'repeat']" class="text-xl" />
+            </div>
           </div>
         </div>
         <div class="flex-grow flex-1">
           <div class="h-full w-full flex justify-end items-center gap-3 pr-3">
             <Popover class="relative">
-              <PopoverButton
-                ><font-awesome :icon="['fas', 'volume-high']" class="text-xl cursor-pointer"
-              /></PopoverButton>
+              <PopoverButton>
+                <font-awesome v-if="volumeValue == 0" :icon="['fas', 'volume-xmark']" />
+                <font-awesome v-else-if="audioMuted" :icon="['fas', 'volume-xmark']" />
+                <font-awesome
+                  v-else-if="volumeValue > 0 && volumeValue < 50"
+                  :icon="['fas', 'volume-low']" />
+                <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']" />
+              </PopoverButton>
               <transition
                 @enter="setVolume_enter"
                 enter-active-class="transition duration-200 ease-out"
@@ -97,32 +108,11 @@
                 leave-to-class="translate-y-10 opacity-0">
                 <PopoverPanel
                   class="h-8 bg-gray-800 p-3 rounded-md flex items-center absolute bottom-14 right-0 z-10">
-                  <div class="flex-grow flex items-center gap-2">
-                    <div
-                      v-if="showButtons"
-                      class="w-8 h-full flex items-center justify-center cursor-pointer hover:text-orange-400"
-                      style="transition: color 0.2s ease"
-                      @click="muteAudio">
-                      <font-awesome v-if="volumeValue == 0" :icon="['fas', 'volume-xmark']" />
-                      <font-awesome v-else-if="audioMuted" :icon="['fas', 'volume-xmark']" />
-                      <font-awesome
-                        v-else-if="volumeValue > 0 && volumeValue < 50"
-                        :icon="['fas', 'volume-low']" />
-                      <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']" />
-                    </div>
-                    <div class="h-full w-64 flex items-center volumeSlider">
-                      <input
-                        v-model="volumeValue"
-                        type="range"
-                        min="0"
-                        max="100"
-                        @input="setVolume"
-                        class="w-full h-full"
-                        id="position"
-                        name="position" />
-                    </div>
-                    <div class="text-sm w-7 flex justify-center">{{ volumeValue }}</div>
-                  </div>
+                  <AudioSlider
+                    :volume="volumeValue"
+                    :player="player"
+                    @setVolume="setVolume"
+                    @muteAudio="muteAudio"></AudioSlider>
                 </PopoverPanel>
               </transition>
             </Popover>
@@ -148,6 +138,7 @@ onMounted(async () => {
     showButtons.value = true;
     window.addEventListener('keydown', event => {
       if (event.code === 'Space') {
+        event.preventDefault();
         toggleAudio();
       }
     });
@@ -157,29 +148,24 @@ onMounted(async () => {
 const audioMuted = ref(false);
 const volumeValue = ref(100);
 const playbackTime = ref(0);
-const audioDuration = ref(100);
+const audioDuration = ref(null);
 const audioLoaded = ref(true);
 const isPlaying = ref(false);
 let listenerActive = false;
 const player = ref(null);
 
-const setVolume = () => {
-  let audio = player.value;
-  if (audio) {
-    let element = document.querySelector('.volumeSlider');
-    element.style.setProperty('--before-width', `${volumeValue.value}%`);
-    audioMuted.value = false;
-    audio.muted = false;
-    audio.volume = volumeValue.value / 100;
-  }
+const updateTime = value => {
+  playbackTime.value = value;
 };
-const setVolume_enter = () => {
+
+const setVolume = volume => {
   let audio = player.value;
-  if (audio) {
-    let element = document.querySelector('.volumeSlider');
-    element.style.setProperty('--before-width', `${volumeValue.value}%`);
-  }
+  volumeValue.value = volume;
+  audioMuted.value = false;
+  audio.muted = false;
+  audio.volume = volume / 100;
 };
+
 const muteAudio = () => {
   let audio = player.value;
   if (audio && audio.muted == false) {
@@ -191,36 +177,6 @@ const muteAudio = () => {
   }
 };
 
-const convertTime = seconds => {
-  const format = val => `0${Math.floor(val)}`.slice(-2);
-  const hours = seconds / 3600;
-  const minutes = (seconds % 3600) / 60;
-  return [minutes, seconds % 60].map(format).join(':');
-};
-
-const totalTime = () => {
-  const audio = player.value;
-  if (audio) {
-    const seconds = audio.duration;
-    return convertTime(seconds);
-  } else {
-    return '00:00';
-  }
-};
-
-const elapsedTime = () => {
-  const audio = player.value;
-  if (audio) {
-    let seconds = audio.currentTime;
-    let element = document.querySelector('.slider');
-    let ratio = (seconds / audio.duration) * 100;
-    element.style.setProperty('--before-width', `${ratio}%`);
-    return convertTime(seconds);
-  } else {
-    return '00:00';
-  }
-};
-
 const initSlider = () => {
   const audio = player.value;
   if (audio) {
@@ -229,8 +185,6 @@ const initSlider = () => {
 };
 onMounted(() => {
   initSlider();
-  elapsedTime();
-  totalTime();
 });
 const playbackListener = e => {
   const audio = player.value;
@@ -304,22 +258,15 @@ nextTick(() => {
 </script>
 
 <style scoped>
-.progressBar {
-  position: relative;
+.icons-button {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+  background-color: rgba(0, 0, 0, 0);
 }
-.progressBar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 15px;
-  height: 100%;
-  background: #21201f;
-  border-radius: 50% 50%;
-}
-.progressBar::after:hover {
-  cursor: pointer;
-  background: #ffffff;
+.icons-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 .background {
   background: linear-gradient(0deg, rgb(92, 77, 144) 0%, rgb(125, 107, 157) 100%);
@@ -347,7 +294,7 @@ input[type='range'] {
 .slider::before {
   content: '';
   z-index: -1;
-  width: var(--before-width);
+  width: calc(var(--before-width) + 2px);
   height: 100%;
   position: absolute;
   top: 0;
@@ -379,7 +326,6 @@ input[type='range']::-webkit-slider-thumb {
   background-color: #f50;
   border-radius: 50%;
   border: none;
-
   transition: 0.2s ease-in-out;
 }
 

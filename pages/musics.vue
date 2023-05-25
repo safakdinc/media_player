@@ -5,7 +5,11 @@
       style="background-color: rgb(5, 14, 22)">
       <div class="text-4xl font-fester font-bold">Müzik</div>
       <div class="flex items-center gap-5 links">
-        <nuxt-link v-for="(item, index) in items" :to="item.path" @click="switchPage(index)">
+        <nuxt-link
+          v-for="(item, index) in items"
+          :to="item.path"
+          @click="switchPage(index)"
+          :key="index">
           <div class="flex gap-3 font-yolk text-lg items-center cursor-pointer" ref="link_object">
             {{ item.text }}
           </div>
@@ -48,28 +52,21 @@ const switchPage = index => {
   element.style.setProperty('--after-left', `${leftValue}px`);
 };
 onMounted(async () => {
-  let route = router.currentRoute.value;
-  link_object.value.forEach((link, index) => {
-    if (items.value[index].path === route.path) {
-      let element = document.querySelector('.links');
-      let element_rect = element.getBoundingClientRect();
-      let link_rect = link.getBoundingClientRect();
-      let leftValue = link_rect.left - element_rect.left;
-      element.style.setProperty('--after-width', `${link_rect.right - link_rect.left}px`);
-      element.style.setProperty('--after-left', `${leftValue}px`);
-    }
-  });
-  /* setTimeout(() => {
-    let element = document.querySelector('.links');
-    let element_2 = document.querySelector('.router-link-exact-active');
-    let rect = element_2.getBoundingClientRect();
-    console.log(element_2);
-    console.log(rect.right - rect.left);
-    element.style.setProperty('--after-width', `${rect.right - rect.left}px`);
-  }, 100);*/
+  setTimeout(() => {
+    let route = router.currentRoute.value;
+    link_object.value.forEach((link, index) => {
+      if (items.value[index].path === route.path) {
+        let element = document.querySelector('.links');
+        let element_rect = element.getBoundingClientRect();
+        let link_rect = link.getBoundingClientRect();
+        let leftValue = link_rect.left - element_rect.left;
+        element.style.setProperty('--after-width', `${link_rect.right - link_rect.left}px`);
+        element.style.setProperty('--after-left', `${leftValue}px`);
+      }
+    });
+  }, 1000);
 });
 </script>
-
 <style scoped>
 .links {
   position: relative;
@@ -101,3 +98,4 @@ onMounted(async () => {
 }
 </style>
 <style src="@/assets/css/fonts.css"></style>
+<style src="@/assets/css/page-transitions.css"></style>
