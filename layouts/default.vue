@@ -34,7 +34,7 @@
             <!-- Hide the default audio player -->
             <div>
               <audio style="display: none" ref="player" id="player">
-                <source src="@/assets/strange.mp3" type="audio/ogg" />
+                <source id="audioSource" src="@/assets/example.mp3" type="audio/ogg" />
               </audio>
             </div>
             <div class="icons-button flex justify-center items-center cursor-pointer">
@@ -82,7 +82,9 @@
                 :icon="['fas', 'forward-step']"
                 class="text-xl cursor-pointer"></font-awesome>
             </div>
-            <div class="icons-button flex justify-center items-center cursor-pointer">
+            <div
+              class="icons-button flex justify-center items-center cursor-pointer"
+              @click="deneme">
               <font-awesome :icon="['fas', 'repeat']" class="text-xl" />
             </div>
           </div>
@@ -135,6 +137,7 @@ import { useStore } from 'vuex';
 const showButtons = ref(false);
 onMounted(async () => {
   setTimeout(() => {
+    console.log(import('@/assets/example.mp3'));
     showButtons.value = true;
     window.addEventListener('keydown', event => {
       if (event.code === 'Space') {
@@ -274,76 +277,6 @@ nextTick(() => {
 
 .play-button {
   height: 45px;
-}
-input[type='range'] {
-  z-index: 1;
-  margin: auto;
-  -webkit-appearance: none;
-  appearance: none;
-  position: relative;
-  width: 100%;
-  height: 5px;
-  cursor: pointer;
-  outline: none;
-  border-radius: 5px; /* iOS */
-  background: white;
-}
-.slider {
-  position: relative;
-}
-.slider::before {
-  content: '';
-  z-index: -1;
-  width: calc(var(--before-width) + 2px);
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 5px;
-  background-color: #f50;
-}
-.volumeSlider {
-  position: relative;
-}
-.volumeSlider::before {
-  content: '';
-  pointer-events: none;
-  height: 100%;
-  width: var(--before-width);
-  z-index: 10;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 5px;
-  background-color: #f50;
-}
-
-input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 15px;
-  width: 15px;
-  background-color: #f50;
-  border-radius: 50%;
-  border: none;
-  transition: 0.2s ease-in-out;
-}
-
-input[type='range']::-moz-range-thumb {
-  height: 15px;
-  width: 15px;
-  background-color: #f50;
-  border-radius: 50%;
-  border: none;
-  transition: 0.2s ease-in-out;
-}
-
-input[type='range']::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 10px rgba(255, 85, 0, 0.4);
-}
-
-input[type='range']::-moz-range-thumb:hover {
-  box-shadow: 0 0 0 10px rgba(255, 85, 0, 0.4);
 }
 </style>
 
