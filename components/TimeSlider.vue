@@ -32,6 +32,7 @@ const props = defineProps({
 
 const seconds = ref(null);
 const value = ref(0);
+const anchor = ref(null);
 
 const convertTime = seconds => {
   const format = val => `0${Math.floor(val)}`.slice(-2);
@@ -43,12 +44,13 @@ const convertTime = seconds => {
 watch(
   () => props.playbackTime,
   newPlaybackTime => {
-    value.value = newPlaybackTime;
+    anchor.value = Math.round(newPlaybackTime);
     seconds.value = convertTime(newPlaybackTime);
   }
 );
 
 watch(seconds, newTime => {
+  value.value = anchor.value;
   let element = document.querySelector('.slider');
   let ratio = (value.value / props.audioDuration) * 100;
   element.style.setProperty('--before-width', `${ratio}%`);
@@ -116,7 +118,8 @@ input[type='range'] {
   position: absolute;
   top: 0;
   left: 0;
-  border-radius: 3px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
   background-color: #f50;
 }
 
