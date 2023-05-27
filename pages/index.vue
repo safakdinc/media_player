@@ -60,6 +60,14 @@ onMounted(() => {
   //     }
   //   );
   // } ekleme testi
+  invoke("get_file", { path: `C:/Users/coolpc/Music/Kalimba.mp3` })
+    .then((fileData) => {
+      console.log(fileData);
+      console.log(`file data => ${fileData}`);
+    })
+    .catch((error) => {
+      console.log(`there is an error in getting file data => ${error}`);
+    });
 });
 
 const items = [

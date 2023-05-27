@@ -1,11 +1,11 @@
 [package]
-name = "app"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
-default-run = "app"
+name = "media_player_app"
+version = "0.2.1"
+description = "media player (it will be better than all)"
+authors = ["xfxpositions", "kodsilici02"]
+license = "MIT"
+repository = "https://github.com/kodsilici02/media_player"
+default-run = "media_player_app"
 edition = "2021"
 rust-version = "1.60"
 
@@ -22,6 +22,9 @@ anyhow = "1.0.71"
 chrono = { version = "0.4.24", features = ["serde"] }
 bincode = "1.3.3"
 flate2 = "1.0.26"
+audiotags = "0.4.1"
+id3 = "1.7.0"
+base64 = "0.21.2"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.
