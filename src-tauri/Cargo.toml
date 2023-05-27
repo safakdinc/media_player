@@ -22,6 +22,7 @@ anyhow = "1.0.71"
 chrono = { version = "0.4.24", features = ["serde"] }
 bincode = "1.3.3"
 flate2 = "1.0.26"
+audiotags = "0.4.1"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

@@ -1,18 +1,19 @@
 #![allow(dead_code)]
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
+mod get_file_data;
 use std::fs;
 use std::{ fs::File, collections::VecDeque };
 use bincode::{ serialize, deserialize };
 use flate2::{ write::GzEncoder, read::GzDecoder };
 use flate2::Compression;
+use get_file_data::{ get_file_data, FileData };
 use serde::{ Serialize, Deserialize };
 use std::io::{ Write, Read };
 use anyhow::{ Result, Context };
 use chrono::{ DateTime, Local, serde::ts_seconds, Utc };
 use std::path::Path;
-
+use serde_json;
 #[derive(Serialize, Deserialize)]
 struct MediaEntry {
     file_path: String,
@@ -136,6 +137,17 @@ fn add_latest_tracks(path: String) -> Result<String, String> {
     Ok(format!("Written, file => {}", &LATEST_TRACK_PATH))
 }
 
+#[tauri::command]
+fn get_file(path: String) -> Result<FileData<'static>, String> {
+    match get_file_data(path) {
+        Ok(file_data) => {
+            serde_json::to_string(&file_data);
+            Ok(file_data)
+        }
+        Err(e) => { Err(e.to_string()) }
+    }
+}
+
 // #[tauri::command]
 // fn get_media(path: String) -> Result<String, String> {
 //     let file_path = Path::new(path.to_string());
@@ -163,7 +175,7 @@ fn add_latest_tracks(path: String) -> Result<String, String> {
 fn main() {
     tauri::Builder
         ::default()
-        .invoke_handler(tauri::generate_handler![get_latest_tracks, add_latest_tracks])
+        .invoke_handler(tauri::generate_handler![get_latest_tracks, add_latest_tracks, get_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
