@@ -2,11 +2,12 @@ use std::fs::File;
 use std::io::Write;
 use id3::{ Tag, TagLike };
 use serde::Serialize;
+use base64::{ Engine as _, engine::{ self, general_purpose }, alphabet };
 
 #[derive(Serialize)]
 struct PictureData {
     mime_type: String,
-    data: Vec<u8>,
+    data: String,
 }
 
 #[derive(Serialize)]
@@ -49,15 +50,17 @@ pub fn get_file_data(path: String) -> Result<FileData, Box<dyn std::error::Error
                 "unsupported format"
             }
         };
-        let image_path = "../image.jpg.".to_owned() + image_format;
-        let mut image_file = File::create(&image_path).expect("Failed to create image file");
-        image_file.write_all(&image_data).expect("Failed to write image data");
+        // let image_path = "../image".to_owned() + image_format;
+        // let mut image_file = File::create(&image_path).expect("Failed to create image file");
+        // image_file.write_all(&image_data).expect("Failed to write image data");
+        let b64 = general_purpose::STANDARD.encode(image_data);
+
         let picture_data = PictureData {
-            data: image_data,
+            data: b64,
             mime_type: image_format.to_owned(),
         };
         audio_data.picture = Some(picture_data);
-        println!("Album artwork saved to: {}", image_path);
+        //println!("Album artwork saved to: {}", image_path);
     } else {
         println!("No album artwork found");
     }
