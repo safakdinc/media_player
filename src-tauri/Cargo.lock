@@ -65,6 +65,7 @@ dependencies = [
  "bincode",
  "chrono",
  "flate2",
+ "id3",
  "serde",
  "serde_json",
  "tauri",

@@ -138,12 +138,9 @@ fn add_latest_tracks(path: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-fn get_file(path: String) -> Result<FileData<'static>, String> {
+fn get_file(path: String) -> Result<String, String> {
     match get_file_data(path) {
-        Ok(file_data) => {
-            serde_json::to_string(&file_data);
-            Ok(file_data)
-        }
+        Ok(file_data) => { Ok(serde_json::to_string(&file_data).unwrap()) }
         Err(e) => { Err(e.to_string()) }
     }
 }
