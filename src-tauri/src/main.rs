@@ -13,7 +13,7 @@ use std::io::{ Write, Read };
 use anyhow::{ Result, Context };
 use chrono::{ DateTime, Local, serde::ts_seconds, Utc };
 use std::path::Path;
-use serde_json;
+use serde_json::{ self, Value };
 #[derive(Serialize, Deserialize)]
 struct MediaEntry {
     file_path: String,
@@ -138,9 +138,9 @@ fn add_latest_tracks(path: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-fn get_file(path: String) -> Result<String, String> {
+fn get_file(path: String) -> Result<Value, String> {
     match get_file_data(path) {
-        Ok(file_data) => { Ok(serde_json::to_string(&file_data).unwrap()) }
+        Ok(file_data) => { Ok(serde_json::to_value(&file_data).unwrap()) }
         Err(e) => { Err(e.to_string()) }
     }
 }
