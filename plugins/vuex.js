@@ -2,16 +2,27 @@ import { createStore } from 'vuex';
 const store = createStore({
   state() {
     return {
-      isPlaying: false,
-      playingNow: '@/assets/strange.mp3'
+      tracks: [
+        'https://www.youtube.com/watch?v=QvqjVCWT_4g',
+        'https://www.youtube.com/watch?v=z69T1yUzn44',
+        'https://www.youtube.com/watch?v=mKfzgL8VRV4'
+      ],
+      playingNowIndex: 0,
+      playingNow: ''
     };
   },
   mutations: {
-    togglePlaying(state) {
-      state.isPlaying = !state.isPlaying;
+    setPlayingNow(state, payload) {
+      state.playingNow = payload.link;
+      state.playingNowThumbnail = payload.thumbnail;
+      state.playingNowIndex = payload.index;
     },
-    setPlayingNow(state, audio) {
-      state.playingNow = audio;
+    nextTrack(state) {
+      state.playingNowIndex++;
+      if (state.playingNowIndex >= state.tracks.length) {
+        state.playingNowIndex = 0;
+      }
+      state.playingNow = state.tracks[state.playingNowIndex];
     }
   }
 });
