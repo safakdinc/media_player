@@ -1,41 +1,39 @@
 <template>
   <div class="w-full flex flex-col gap-5 p-2">
     <div
-      v-for="(item, index) in items"
+      v-if="tracksData"
+      v-for="(item, index) in tracksData"
+      :key="index"
       class="w-full h-14 flex items-center gap-2 pr-2 pb-1 border-b hover-link cursor-pointer rounded-md"
       style="border-color: rgba(197, 197, 197, 0.4)"
       @click="playAudio(index)">
       <div class="h-full w-16">
-        <img
-          class="w-full h-full object-center object-cover rounded-sm"
-          src="../../assets/photos/example.jpg" />
+        <img class="w-full h-full object-center object-cover rounded-sm" :src="item.thumbnail" />
       </div>
-      <div class="w-2/5">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium, eos.
-      </div>
+      <div class="w-2/5">{{ item.title }}</div>
       <div>Bilinmeyen Albüm</div>
       <div class="ml-auto">Bilinmeyen Tarz</div>
-      <div class="ml-auto">05:00</div>
+      <div class="ml-auto">
+        {{ item.duration.hours !== 0 ? `${item.duration.hours}:` : '' }}{{ item.duration.minutes !== 0 ? item.duration.minutes : '00' }}:{{
+          item.duration.seconds
+        }}
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 
-const items = [
-  {
-    src: '@/assets/example.mp3'
-  },
-  {
-    src: '@/assets/strange.mp3'
-  }
-];
-</script>
+const tracksData = ref(computed(() => store.state.tracksData));
 
+const playAudio = index => {
+  store.commit('setPlayingNow', index);
+};
+</script>
 <style scoped>
 .hover-link {
   position: relative;
