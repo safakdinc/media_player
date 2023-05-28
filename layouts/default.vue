@@ -115,24 +115,24 @@ import { useStore } from 'vuex';
 
 const axios = useNuxtApp().$axios;
 const store = useStore();
+store.dispatch('getTracksDatas');
 const audioSource = ref(store.state.playingNow);
 const thumbnail = ref(store.state.playingNowThumbnail);
 watch(
   () => store.state.playingNow,
-  async newPlayingNowUrl => {
+  async newPlayingNow => {
     let response = await axios.get('/api/audio_link', {
       params: {
-        link: newPlayingNowUrl
+        link: newPlayingNow.link
       }
     });
     audioSource.value = response.data.url;
-    thumbnail.value = store.state.playingNowThumbnail;
+    thumbnail.value = newPlayingNow.thumbnail;
     resetPlayer();
   }
 );
 
 const nextTrack = () => {
-  console.log('next');
   store.commit('nextTrack');
 };
 

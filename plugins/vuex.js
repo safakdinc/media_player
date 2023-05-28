@@ -1,4 +1,6 @@
 import { createStore } from 'vuex';
+import axios from 'axios';
+import moment from 'moment';
 const store = createStore({
   state() {
     return {
@@ -7,22 +9,47 @@ const store = createStore({
         'https://www.youtube.com/watch?v=z69T1yUzn44',
         'https://www.youtube.com/watch?v=mKfzgL8VRV4'
       ],
+      tracksData: [],
       playingNowIndex: 0,
-      playingNow: ''
+      playingNow: { link: '', title: '', thumbnail: '', duration: '' }
     };
   },
   mutations: {
-    setPlayingNow(state, payload) {
-      state.playingNow = payload.link;
-      state.playingNowThumbnail = payload.thumbnail;
-      state.playingNowIndex = payload.index;
+    setTracksDatas(state, payload) {
+      state.tracksData = payload;
+    },
+    setPlayingNow(state, index) {
+      state.playingNow = state.tracksData[index];
     },
     nextTrack(state) {
       state.playingNowIndex++;
       if (state.playingNowIndex >= state.tracks.length) {
         state.playingNowIndex = 0;
       }
-      state.playingNow = state.tracks[state.playingNowIndex];
+      state.playingNow = state.tracksData[state.playingNowIndex];
+    }
+  },
+  actions: {
+    async getTracksDatas({ commit, state }) {
+      const datas = [];
+      state.tracks.forEach(async link => {
+        let response = await axios.get('http://localhost:8888/api/audio_data', {
+          params: {
+            link: link
+          }
+        });
+        let iso8601Duration = response.data.duration;
+        let duration = moment.duration(iso8601Duration);
+        let title = response.data.audioData.items[0].snippet.title;
+        let thumbnail = response.data.audioData.items[0].snippet.thumbnails.maxres.url;
+        datas.unshift({
+          title: title,
+          link: link,
+          thumbnail: thumbnail,
+          duration: { hours: duration.hours(), minutes: duration.minutes(), seconds: duration.seconds() }
+        });
+      });
+      commit('setTracksDatas', datas);
     }
   }
 });

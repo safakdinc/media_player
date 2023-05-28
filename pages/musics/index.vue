@@ -1,7 +1,9 @@
 <template>
   <div class="w-full flex flex-col gap-5 p-2">
     <div
-      v-for="(item, index) in datas"
+      v-if="tracksData"
+      v-for="(item, index) in tracksData"
+      :key="index"
       class="w-full h-14 flex items-center gap-2 pr-2 pb-1 border-b hover-link cursor-pointer rounded-md"
       style="border-color: rgba(197, 197, 197, 0.4)"
       @click="playAudio(index)">
@@ -21,41 +23,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
-import moment from 'moment';
 
 const store = useStore();
-const axios = useNuxtApp().$axios;
 
-const items = ref(store.state.tracks);
-const datas = ref([]);
-onMounted(async () => {
-  items.value.forEach(async item => {
-    let response = await axios.get('/api/audio_data', {
-      params: {
-        link: item
-      }
-    });
-    let iso8601Duration = response.data.duration;
-    const duration = moment.duration(iso8601Duration);
-    let title = response.data.audioData.items[0].snippet.title;
-    let thumbnail = response.data.audioData.items[0].snippet.thumbnails.maxres.url;
-    datas.value.unshift({
-      title: title,
-      link: item,
-      thumbnail: thumbnail,
-      duration: { hours: duration.hours(), minutes: duration.minutes(), seconds: duration.seconds() }
-    });
-  });
-});
+const tracksData = ref(computed(() => store.state.tracksData));
 
-const playAudio = async index => {
-  let data = datas.value[index];
-  store.commit('setPlayingNow', { link: data.link, thumbnail: data.thumbnail, index: index });
+const playAudio = index => {
+  store.commit('setPlayingNow', index);
 };
 </script>
-
 <style scoped>
 .hover-link {
   position: relative;
