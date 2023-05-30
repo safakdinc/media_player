@@ -31,7 +31,6 @@ const store = useStore();
 const tracksData = ref(computed(() => store.state.tracksData));
 const datasReady = ref(false);
 onMounted(async () => {
-  console.log(tracksData.value);
   setTimeout(() => {
     datasReady.value = true;
   }, 3000);

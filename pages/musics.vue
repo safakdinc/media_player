@@ -30,7 +30,7 @@
     <Transition name="background">
       <div v-if="addMusic" class="fixed w-full h-full top-0 left-0 z-20 pointer-events-none flex items-center justify-center">
         <div class="pointer-events-auto">
-          <AddMusic></AddMusic>
+          <AddMusic :keepalive="{}"></AddMusic>
         </div>
       </div>
     </Transition>

@@ -21,6 +21,12 @@ const store = createStore({
     setPlayingNow(state, index) {
       state.playingNow = state.tracksData[index];
     },
+    addNewTrack(state, link) {
+      state.tracks.push(link);
+    },
+    addNewTrackData(state, track) {
+      state.tracksData.push(track);
+    },
     nextTrack(state) {
       state.playingNowIndex++;
       if (state.playingNowIndex >= state.tracks.length) {
@@ -46,6 +52,19 @@ const store = createStore({
         });
       });
       commit('setTracksDatas', datas);
+    },
+    async addTrackData({ commit, state }, link) {
+      let data = {};
+      let response = await $fetch(`/api/audio_data?url=${link}`);
+      let iso8601Duration = response.duration;
+      let duration = moment.duration(iso8601Duration);
+      let title = response.data.items[0].snippet.title;
+      let thumbnail = response.data.items[0].snippet.thumbnails.maxres.url;
+      data.title = title;
+      data.link = link;
+      data.thumbnail = thumbnail;
+      data.duration = { hours: duration.hours(), minutes: duration.minutes(), seconds: duration.seconds() };
+      commit('addNewTrackData', data);
     }
   }
 });
