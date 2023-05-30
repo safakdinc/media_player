@@ -121,12 +121,8 @@ const thumbnail = ref(store.state.playingNowThumbnail);
 watch(
   () => store.state.playingNow,
   async newPlayingNow => {
-    let response = await axios.get('/api/audio_link', {
-      params: {
-        link: newPlayingNow.link
-      }
-    });
-    audioSource.value = response.data.url;
+    let response = await $fetch(`/api/audio_link?url=${newPlayingNow.link}`);
+    audioSource.value = response.data;
     thumbnail.value = newPlayingNow.thumbnail;
     resetPlayer();
   }

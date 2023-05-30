@@ -8,12 +8,8 @@
     </div>
     <div class="w-full text-white">
       Videolar
-      <div>
-        <button @click="playAudio">Play YouTube Audio</button>
-        <audio ref="audioPlayer" controls>
-          <source :src="audioSource" type="audio/mpeg" />
-        </audio>
-      </div>
+      <button class="w-20 h-5 bg-white" @click="fetchData"></button>
+
       <NuxtPage></NuxtPage>
     </div>
   </div>
@@ -35,6 +31,11 @@ const playAudio = async () => {
   console.log(audioSource.value);
   audioPlayer.value.load();
   audioPlayer.value.play();
+};
+const fetchData = async () => {
+  const link = 'https://www.youtube.com/watch?v=QvqjVCWT_4g';
+  let response = await $fetch(`/api/audio_data?url=${link}`);
+  console.log(response);
 };
 </script>
 

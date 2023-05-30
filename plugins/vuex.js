@@ -33,15 +33,11 @@ const store = createStore({
     async getTracksDatas({ commit, state }) {
       const datas = [];
       state.tracks.forEach(async link => {
-        let response = await axios.get('http://localhost:8888/api/audio_data', {
-          params: {
-            link: link
-          }
-        });
-        let iso8601Duration = response.data.duration;
+        let response = await $fetch(`/api/audio_data?url=${link}`);
+        let iso8601Duration = response.duration;
         let duration = moment.duration(iso8601Duration);
-        let title = response.data.audioData.items[0].snippet.title;
-        let thumbnail = response.data.audioData.items[0].snippet.thumbnails.maxres.url;
+        let title = response.data.items[0].snippet.title;
+        let thumbnail = response.data.items[0].snippet.thumbnails.maxres.url;
         datas.unshift({
           title: title,
           link: link,
