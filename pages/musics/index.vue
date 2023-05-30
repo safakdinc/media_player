@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col gap-5 p-2">
     <div
-      v-if="tracksData"
+      v-if="datasReady"
       v-for="(item, index) in tracksData"
       :key="index"
       class="w-full h-14 flex items-center gap-2 pr-2 pb-1 border-b hover-link cursor-pointer rounded-md"
@@ -29,7 +29,13 @@ import { useStore } from 'vuex';
 const store = useStore();
 
 const tracksData = ref(computed(() => store.state.tracksData));
-
+const datasReady = ref(false);
+onMounted(async () => {
+  console.log(tracksData.value);
+  setTimeout(() => {
+    datasReady.value = true;
+  }, 3000);
+});
 const playAudio = index => {
   store.commit('setPlayingNow', index);
 };
@@ -49,6 +55,7 @@ const playAudio = index => {
   width: 100%;
   transform: scaleX(0);
   height: 1px;
+  border-radius: 3px;
   bottom: 0;
   left: 0;
   background-color: #fff;
