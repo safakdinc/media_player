@@ -25,7 +25,7 @@ const store = createStore({
       state.tracks.push(link);
     },
     addNewTrackData(state, track) {
-      state.tracksData.push(track);
+      state.tracksData.unshift(track);
     },
     nextTrack(state) {
       state.playingNowIndex++;

@@ -1,10 +1,7 @@
 <template>
   <div class="w-full h-auto flex flex-wrap gap-3 p-5">
     <div v-for="group in sortedItems" class="w-full flex flex-wrap">
-      <div
-        class="w-full flex text-xl sticky top-24"
-        style="z-index: 2; background-color: rgb(5, 14, 22)"
-        :id="group.letter">
+      <div class="w-full flex text-xl sticky top-24" style="z-index: 2; background-color: rgb(5, 14, 22)" :id="group.letter">
         <div class="cursor-pointer" @click="toggleSelector">
           {{ group.letter }}
         </div>
@@ -16,9 +13,7 @@
         <div class="relative h-4/6 w-full">
           <!-- Image -->
           <div class="h-full w-full rounded-lg object-contain">
-            <img
-              class="object-cover w-full h-full object-center image rounded-[50%]"
-              src="@/assets/photos/mctonight.png" />
+            <img class="object-cover w-full h-full object-center image rounded-[50%]" src="@/assets/photos/mctonight.png" />
           </div>
           <!-- Checkbox -->
           <div class="absolute top-1 left-1 icons cursor-pointer">
@@ -48,9 +43,7 @@
         @click="toggleSelector"></div>
     </Transition>
     <Transition name="background">
-      <div
-        v-if="selectorOn"
-        class="fixed w-full h-full top-0 left-0 z-20 pointer-events-none flex items-center justify-center">
+      <div v-if="selectorOn" class="fixed w-full h-full top-0 left-0 z-20 pointer-events-none flex items-center justify-center">
         <div class="pointer-events-auto">
           <LetterSelector :letters="letters" @scrollToLetter="scrollToLetter"></LetterSelector>
         </div>
@@ -122,18 +115,3 @@ sortedItems.value.forEach(element => {
   opacity: 1;
 }
 </style>
-<style>
-.font_1 {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-.font-fester {
-  font-family: 'Fester Bold', sans-serif;
-}
-.font-yolk {
-  font-family: 'TPF Yolk Bold', sans-serif;
-}
-.font-code-next {
-  font-family: 'Code Next Book', sans-serif;
-}
-</style>
-<style src="@/assets/css/fonts.css"></style>

@@ -66,4 +66,3 @@ const playAudio = index => {
   transform-origin: bottom left;
 }
 </style>
-<style scoped src="@/assets/css/page-transitions.css"></style>

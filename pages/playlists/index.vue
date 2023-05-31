@@ -25,5 +25,3 @@ onMounted(async () => {
   text.value = await fetchText();
 }); // Call fetchText on component mount
 </script>
-
-<style scoped></style>
