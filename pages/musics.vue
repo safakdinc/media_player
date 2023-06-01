@@ -14,7 +14,7 @@
           class="flex items-center justify-center rounded-lg hover:bg-slate-400 cursor-pointer transition-colors duration-300 bg-opacity-30 p-2 gap-2"
           @click="toggleAddMusic">
           <font-awesome :icon="['fas', 'folder-plus']" />
-          <div class="font-yolk text-lg">Müzik ekle</div>
+          <div class="font-yolk text-lg hidden sm:flex">Müzik ekle</div>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
     <Transition name="background">
       <div v-if="addMusic" class="fixed w-full h-full top-0 left-0 z-20 pointer-events-none flex items-center justify-center">
         <div class="pointer-events-auto">
-          <AddMusic :keepalive="{}"></AddMusic>
+          <AddMusic :keepalive="{}" @close-modal="closeModal"></AddMusic>
         </div>
       </div>
     </Transition>
@@ -40,6 +40,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+
+const closeModal = () => {
+  addMusic.value = false;
+};
 
 const loaded = ref(false);
 onMounted(async () => {
@@ -120,19 +124,3 @@ onMounted(async () => {
   transform: translateY(0px);
 }
 </style>
-<style>
-.font_1 {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-.font-fester {
-  font-family: 'Fester Bold', sans-serif;
-}
-.font-yolk {
-  font-family: 'TPF Yolk Bold', sans-serif;
-}
-.font-code-next {
-  font-family: 'Code Next Book', sans-serif;
-}
-</style>
-<style src="@/assets/css/fonts.css"></style>
-<style src="@/assets/css/page-transitions.css"></style>

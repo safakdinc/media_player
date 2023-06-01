@@ -1,0 +1,14 @@
+.visualizer {
+  position: relative; /* Added position relative */
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-color: aliceblue;
+  transition: 0.5s ease;
+}
+.element {
+  flex: 1 1 0%;
+  height: 100%;
+  background-color: aqua;
+  transition: 0.2s ease;
+}

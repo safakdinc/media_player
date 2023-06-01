@@ -18,7 +18,7 @@
           <div class="h-full w-32">
             <img v-if="thumbnail" class="w-full h-full object-cover object-center rounded-md" :src="thumbnail" />
           </div>
-          <div class="h-full w-full flex items-center p-2 text-white"></div>
+          <div class="h-full w-full flex items-center p-2 text-white">{{ title }}</div>
         </div>
         <div class="flex-grow flex-1">
           <div class="h-full w-full flex justify-center items-center gap-1">
@@ -67,8 +67,8 @@
               </svg>
             </div>
 
-            <div class="icons-button flex justify-center items-center cursor-pointer">
-              <font-awesome :icon="['fas', 'forward-step']" class="text-xl cursor-pointer" @click="nextTrack()"></font-awesome>
+            <div class="icons-button flex justify-center items-center cursor-pointer" @click="nextTrack()">
+              <font-awesome :icon="['fas', 'forward-step']" class="text-xl cursor-pointer"></font-awesome>
             </div>
             <div class="icons-button flex justify-center items-center cursor-pointer" @click="deneme">
               <font-awesome :icon="['fas', 'repeat']" class="text-xl" />
@@ -112,24 +112,26 @@ import { Vue3Lottie } from 'vue3-lottie';
 import 'vue3-lottie/dist/style.css';
 
 import { useStore } from 'vuex';
-
-const axios = useNuxtApp().$axios;
 const store = useStore();
-store.dispatch('getTracksDatas');
+store.dispatch('getTracksData');
 const audioSource = ref(store.state.playingNow);
-const thumbnail = ref(store.state.playingNowThumbnail);
+const thumbnail = ref(store.state.playingNowthumbnail);
+const title = ref(store.state.playingNow.title);
 watch(
   () => store.state.playingNow,
   async newPlayingNow => {
-    let response = await $fetch(`/api/audio_link?url=${newPlayingNow.link}`);
-    audioSource.value = response.data;
+    console.log(newPlayingNow);
+    audioSource.value = newPlayingNow.source;
     thumbnail.value = newPlayingNow.thumbnail;
+    title.value = newPlayingNow.title;
     resetPlayer();
   }
 );
-
 const nextTrack = () => {
   store.commit('nextTrack');
+};
+const previousTrack = () => {
+  store.commit('previousTrack');
 };
 
 const showButtons = ref(false);

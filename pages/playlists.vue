@@ -12,20 +12,3 @@
 <script setup>
 import { ref } from 'vue';
 </script>
-
-<style scoped></style>
-<style>
-.font_1 {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-.font-fester {
-  font-family: 'Fester Bold', sans-serif;
-}
-.font-yolk {
-  font-family: 'TPF Yolk Bold', sans-serif;
-}
-.font-code-next {
-  font-family: 'Code Next Book', sans-serif;
-}
-</style>
-<style src="@/assets/css/fonts.css"></style>

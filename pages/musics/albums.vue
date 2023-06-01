@@ -1,9 +1,7 @@
 <template>
   <div class="w-full h-auto flex flex-wrap gap-3 p-5 relative">
     <div v-for="(item, index) in items" class="w-full gap-3 flex flex-wrap relative">
-      <div
-        class="w-full sticky top-24 pb-3 text-2xl"
-        style="z-index: 2; background-color: rgb(5, 14, 22)">
+      <div class="w-full sticky top-24 pb-3 text-2xl" style="z-index: 2; background-color: rgb(5, 14, 22)">
         <div>{{ item.name }}</div>
       </div>
       <div
@@ -12,9 +10,7 @@
         <div class="relative h-4/6 w-full">
           <!-- Image -->
           <div class="h-full w-full bg-slate-500 rounded-lg object-contain">
-            <img
-              class="object-cover w-full h-full object-center rounded-lg image"
-              src="@/assets/photos/mctonight.png" />
+            <img class="object-cover w-full h-full object-center rounded-lg image" src="@/assets/photos/mctonight.png" />
           </div>
           <!-- Checkbox -->
           <div class="absolute top-1 left-1 icons cursor-pointer">
@@ -32,9 +28,7 @@
         </div>
 
         <!-- Remaining content -->
-        <div class="flex-grow w-full rounded-lg p-2 overflow-hidden">
-          Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.
-        </div>
+        <div class="flex-grow w-full rounded-lg p-2 overflow-hidden">Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet.</div>
       </div>
     </div>
   </div>
@@ -69,19 +63,3 @@ const items = [
   opacity: 1;
 }
 </style>
-<style>
-.font_1 {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-.font-fester {
-  font-family: 'Fester Bold', sans-serif;
-}
-.font-yolk {
-  font-family: 'TPF Yolk Bold', sans-serif;
-}
-.font-code-next {
-  font-family: 'Code Next Book', sans-serif;
-}
-</style>
-<style src="@/assets/css/fonts.css"></style>
-<style scoped src="@/assets/css/page-transitions.css"></style>
