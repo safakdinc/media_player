@@ -23,8 +23,7 @@
           <img class="rounded-lg" :src="data.thumbnail" />
           <div class="absolute bottom-3 right-5">
             <div class="flex items-center">
-              {{ data.duration.hours !== 0 ? `${data.duration.hours}:` : ''
-              }}{{ data.duration.minutes !== 0 ? data.duration.minutes : '00' }}:{{ data.duration.seconds }}
+              {{ duration_ref.hours == 0 ? '' : duration_ref.hours }}{{ duration_ref.minutes }}:{{ duration_ref.seconds }}
             </div>
           </div>
         </div>
@@ -46,6 +45,8 @@ import '@/assets/css/input.css';
 import moment from 'moment';
 import { storeKey, useStore } from 'vuex';
 
+const emits = defineEmits(['closeModal']);
+
 const axios = useNuxtApp().$axios;
 const store = useStore();
 
@@ -63,13 +64,47 @@ const getYoutubeData = async () => {
     data.value.title = title;
     data.value.thumbnail = thumbnail;
     data.value.duration = { hours: duration.hours(), minutes: duration.minutes(), seconds: duration.seconds() };
+    calculateDuration();
   } catch (error) {
     console.log(error);
   }
 };
+const duration_ref = ref({});
+const calculateDuration = () => {
+  let duration = data.value.duration;
+  let minutes = null;
+  let seconds = null;
+  let hours = null;
+  if (duration.hours == 0) {
+    hours = 0;
+  } else if (duration.hours < 10) {
+    hours = '0' + duration.hours;
+  } else {
+    hours = duration.hours;
+  }
+  if (duration.minutes == 0) {
+    minutes = '00';
+  } else if (duration.minutes < 10) {
+    minutes = '0' + duration.minutes;
+  } else {
+    minutes = duration.minutes;
+  }
+  if (duration.seconds == 0) {
+    seconds = '00';
+  } else if (duration.seconds < 10) {
+    seconds = '0' + duration.seconds;
+  } else {
+    seconds = duration.seconds;
+  }
+  duration_ref.value.hours = hours;
+  duration_ref.value.seconds = seconds;
+  duration_ref.value.minutes = minutes;
+  console.log(duration_ref.value);
+};
 const addTrack = () => {
   let url = link.value;
   store.dispatch('addTrackData', url);
+  emits('closeModal');
 };
 </script>
 

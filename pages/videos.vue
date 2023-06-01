@@ -7,9 +7,6 @@
       </div>
     </div>
     <div class="w-full text-white">
-      Videolar
-      <button class="w-20 h-5 bg-white" @click="fetchData"></button>
-
       <NuxtPage></NuxtPage>
     </div>
   </div>
