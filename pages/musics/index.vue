@@ -23,7 +23,6 @@
         </div>
       </div>
     </div>
-    <AudioVisualizer></AudioVisualizer>
   </div>
 </template>
 

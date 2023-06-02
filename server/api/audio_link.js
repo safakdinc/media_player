@@ -5,8 +5,8 @@ export default defineEventHandler(async event => {
   const videoId = ytdl.getURLVideoID(videoUrl);
   const audioInfo = await ytdl.getInfo(videoId);
   const audioFormat = ytdl.chooseFormat(audioInfo.formats, { quality: 'highestaudio' });
-
   return {
-    data: audioFormat.url
+    data: audioFormat.url,
+    full: audioFormat
   };
 });

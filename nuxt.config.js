@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-
 export default defineNuxtConfig({
   app: {
     head: {
@@ -9,18 +8,15 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: 'page', mode: 'out-in' }
   },
-  serverMiddleware: [
-    {
-      path: '/api', // The path where you want to apply CORS middleware
-      handler: '~/middlewares/cors.js'
-    }
-  ],
+
   buildModules: [
     // ...
     '@nuxtjs/tailwindcss',
     '@nuxtjs/vuex'
   ],
+
   modules: ['@vueuse/motion/nuxt', 'nuxt-headlessui', '@nuxt/devtools', '@nuxtjs/fontaine'],
+
   headlessui: {
     prefix: 'Headless'
   },

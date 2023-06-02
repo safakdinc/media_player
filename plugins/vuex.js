@@ -46,7 +46,7 @@ const store = createStore({
   },
   actions: {
     async getTrackLink({ commit, state }, payload) {
-      let response = await $fetch(`/api/audio_link?url=${payload.link}`);
+      const response = await $fetch('/api/audio_link?url=' + payload.link);
       commit('setPlayingNow', { source: response.data, index: payload.index });
     },
     //init tracks info
