@@ -21,7 +21,7 @@
             </div>
             <!-- Checkbox -->
             <ClientOnly>
-              <div v-if="isSelected(index)" class="absolute top-1 left-1 icons cursor-pointer" @click="toggleItem(index, index_2)">
+              <div v-if="isSelected(index, index_2)" class="absolute top-1 left-1 icons cursor-pointer" @click="toggleItem(index, index_2)">
                 <font-awesome :icon="['fas', 'square-check']" />
               </div>
               <div v-else class="absolute top-1 left-1 icons cursor-pointer" @click="toggleItem(index, index_2)">
