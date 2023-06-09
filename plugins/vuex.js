@@ -54,15 +54,14 @@ const store = createStore({
       state.tracks.forEach(async link => {
         setTimeout(async () => {
           let response = await $fetch(`/api/audio_data?url=${link}`);
-          let iso8601Duration = response.duration;
-          let duration = moment.duration(iso8601Duration);
-          let title = response.data.items[0].snippet.title;
-          let thumbnail = response.data.items[0].snippet.thumbnails.maxres.url;
+          let duration = response.duration;
+          let title = response.title;
+          let thumbnail = response.thumbnail;
           state.tracksData.push({
             title: title,
             link: link,
             thumbnail: thumbnail,
-            duration: { hours: duration.hours(), minutes: duration.minutes(), seconds: duration.seconds() }
+            duration: duration
           });
         }, 100);
       });

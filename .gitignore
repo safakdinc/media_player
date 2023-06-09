@@ -9,4 +9,5 @@ dist
 .DS_Store
 assets/example.mp3
 assets/strange.mp3
+assets/video.mp3
 src-tauri/target/release

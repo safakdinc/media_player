@@ -30,10 +30,10 @@
             </div>
 
             <div class="icons-button flex justify-center items-center cursor-pointer">
-              <font-awesome :icon="['fas', 'shuffle']" class="text-xl cursor-pointer" />
+              <ClientOnly> <font-awesome :icon="['fas', 'shuffle']" class="text-xl cursor-pointer" /></ClientOnly>
             </div>
             <div class="icons-button flex justify-center items-center cursor-pointer" @click="previousTrack()">
-              <font-awesome :icon="['fas', 'backward-step']" class="text-xl cursor-pointer"></font-awesome>
+              <ClientOnly> <font-awesome :icon="['fas', 'backward-step']" class="text-xl cursor-pointer"></font-awesome></ClientOnly>
             </div>
             <div v-if="showButtons">
               <svg
@@ -68,10 +68,10 @@
             </div>
 
             <div class="icons-button flex justify-center items-center cursor-pointer" @click="nextTrack()">
-              <font-awesome :icon="['fas', 'forward-step']" class="text-xl cursor-pointer"></font-awesome>
+              <ClientOnly> <font-awesome :icon="['fas', 'forward-step']" class="text-xl cursor-pointer"></font-awesome></ClientOnly>
             </div>
             <div class="icons-button flex justify-center items-center cursor-pointer" @click="deneme">
-              <font-awesome :icon="['fas', 'repeat']" class="text-xl" />
+              <ClientOnly><font-awesome :icon="['fas', 'repeat']" class="text-xl" /></ClientOnly>
             </div>
           </div>
         </div>
@@ -79,10 +79,12 @@
           <div class="h-full w-full flex justify-end items-center gap-3 pr-3">
             <Popover class="relative">
               <PopoverButton>
-                <font-awesome v-if="volumeValue == 0" :icon="['fas', 'volume-xmark']" />
-                <font-awesome v-else-if="audioMuted" :icon="['fas', 'volume-xmark']" />
-                <font-awesome v-else-if="volumeValue > 0 && volumeValue < 50" :icon="['fas', 'volume-low']" />
-                <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']" />
+                <ClientOnly>
+                  <font-awesome v-if="volumeValue == 0" :icon="['fas', 'volume-xmark']" />
+                  <font-awesome v-else-if="audioMuted" :icon="['fas', 'volume-xmark']" />
+                  <font-awesome v-else-if="volumeValue > 0 && volumeValue < 50" :icon="['fas', 'volume-low']" />
+                  <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']"
+                /></ClientOnly>
               </PopoverButton>
               <transition
                 @enter="setVolume_enter"
@@ -97,7 +99,7 @@
                 </PopoverPanel>
               </transition>
             </Popover>
-            <font-awesome :icon="['fas', 'ellipsis']" class="text-xl cursor-pointer" />
+            <ClientOnly> <font-awesome :icon="['fas', 'ellipsis']" class="text-xl cursor-pointer" /></ClientOnly>
           </div>
         </div>
       </div>
@@ -112,6 +114,7 @@ import { Vue3Lottie } from 'vue3-lottie';
 import 'vue3-lottie/dist/style.css';
 
 import { useStore } from 'vuex';
+
 const store = useStore();
 store.dispatch('getTracksData');
 const audioSource = ref(store.state.playingNow);

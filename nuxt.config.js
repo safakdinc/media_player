@@ -4,7 +4,10 @@ export default defineNuxtConfig({
     head: {
       title: 'Nuxt 3 Portfolio',
       charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1'
+      viewport: 'width=device-width, initial-scale=1',
+      htmlAttrs: {
+        lang: 'tr'
+      }
     },
     pageTransition: { name: 'page', mode: 'out-in' }
   },
@@ -27,5 +30,13 @@ export default defineNuxtConfig({
       autoprefixer: {}
     }
   },
-  plugins: ['~/plugins/fontawesome.js', '~/plugins/vuex.js']
+  plugins: ['~/plugins/fontawesome.client.js', '~/plugins/vuex.js'],
+  build: {
+    transpile: [
+      '@fortawesome/fontawesome-svg-core',
+      '@fortawesome/free-solid-svg-icons',
+      '@fortawesome/free-regular-svg-icons',
+      '@fortawesome/free-brands-svg-icons'
+    ]
+  }
 });

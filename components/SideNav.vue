@@ -1,11 +1,13 @@
 <template>
-  <div v-if="show" class="w-full h-full flex flex-wrap content-start p-3 gap-2 body">
+  <div class="w-full h-full flex flex-wrap content-start p-3 gap-2 body">
     <NuxtLink
       v-for="(item, index) in items"
       :key="index"
       :to="item.path"
+      aria-label="Home"
+      rel="me"
       class="w-full h-10 button_2 rounded-md items-center p-3 gap-3 cursor-pointer hidden lg:flex">
-      <font-awesome v-if="item.icon" :icon="item.icon" class="text-[aliceblue]"></font-awesome>
+      <ClientOnly v-if="item.icon"> <font-awesome :icon="item.icon" class="text-[aliceblue]"></font-awesome></ClientOnly>
       <div v-else v-html="item.html" class="text-[aliceblue]"></div>
       <div class="text-[aliceblue] font-bold">{{ item.text }}</div>
     </NuxtLink>
@@ -14,7 +16,7 @@
       :key="index"
       :to="item.path"
       class="w-full h-10 button_2 rounded-md items-center justify-center p-3 gap-3 cursor-pointer flex lg:hidden flex-shrink-0">
-      <font-awesome v-if="item.icon" :icon="item.icon" class="text-[aliceblue]"></font-awesome>
+      <ClientOnly v-if="item.icon"> <font-awesome :icon="item.icon" class="text-[aliceblue]"></font-awesome></ClientOnly>
       <div v-else v-html="item.html" class="text-[aliceblue]"></div>
     </NuxtLink>
   </div>
@@ -22,12 +24,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-const show = ref(false);
-onMounted(async () => {
-  setTimeout(() => {
-    show.value = true;
-  }, 1);
-});
 
 let items = [
   {
@@ -64,8 +60,7 @@ a.router-link-active {
 }
 .button_2 {
   background: none;
-  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   box-shadow: 0 0 0 0 var(--button-box-shadow-color), inset 0 0 0 0 var(--button-box-shadow-color);
   transform: translate(0, 0);
 }

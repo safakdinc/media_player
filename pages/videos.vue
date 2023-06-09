@@ -1,37 +1,96 @@
 <template>
   <div class="w-full">
-    <div class="w-full sticky flex items-center h-24 gap-5 text-[aliceblue]">
-      <div class="text-4xl font-fester font-bold">Video</div>
-      <div v-for="(item, index) in items" class="flex gap-3 font-yolk text-lg items-center cursor-pointer">
-        {{ item }}
+    <div class="w-full flex items-center h-24 gap-5 text-[aliceblue] sticky top-0 left-0 z-10" style="background-color: rgb(5, 14, 22)">
+      <div class="text-4xl font-fester font-bold">Müzik</div>
+      <div class="flex items-center gap-5 links">
+        <nuxt-link v-for="(item, index) in items" :to="item.path" @click="switchPage(index)" :key="index">
+          <div class="flex gap-3 font-yolk text-lg items-center cursor-pointer" ref="link_object">
+            {{ item.text }}
+          </div>
+        </nuxt-link>
       </div>
     </div>
-    <div class="w-full text-white">
-      <NuxtPage></NuxtPage>
+    <div class="text-[aliceblue] w-full">
+      <NuxtPage :keepalive="{}"></NuxtPage>
     </div>
+    <Transition name="background">
+      <div
+        v-if="addMusic"
+        class="fixed w-full h-full top-0 left-0 z-20 bg-black opacity-80 transition duration-300"
+        @click="toggleAddMusic"></div>
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const items = ref(['Tüm Videolar', 'Klasörler']);
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
-const axios = useNuxtApp().$axios;
-const audioSource = ref(
-  'https://rr8---sn-u0g3uxax3-pnuk.googlevideo.com/videoplayback?expire=1685228667&ei=GzhyZOLFCJT21wKH-5cg&ip=95.10.200.199&id=o-AAoTN1lnr5vBQkJNl36cO2nmcp-72y1V5E_OR0voZLK5&itag=251&source=youtube&requiressl=yes&mh=48&mm=31%2C29&mn=sn-u0g3uxax3-pnuk%2Csn-nv47znel&ms=au%2Crdu&mv=m&mvi=8&pcm2cms=yes&pl=21&initcwndbps=880000&vprv=1&svpuc=1&mime=audio%2Fwebm&ns=VryL3zPeHsiSRROq5yq9WrsN&gir=yes&clen=8921058&dur=516.101&lmt=1625605086820889&mt=1685206607&fvip=1&keepalive=yes&fexp=24007246%2C24362685&c=WEB&txp=5432434&n=-zLb3N6nL87X3A&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Csvpuc%2Cmime%2Cns%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRQIgGdR7MKA0i19NLUCRhQf6m03vUBiwPQ7mJvvaS0fQBFECIQCssrJNkeGvufEKWRs3nUmP2bOA5yBYiTr006Ye2PrrAQ%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgTJEMjl5_8BqcfMM3y1X06_e9wUbs669TDR8djXAW05kCIDeq-oNFjRykF5XIo3F6SmdoX4WBCZO5JWt9xOncNJJX'
-);
-const audioPlayer = ref(null);
+const addMusic = ref(false);
+const toggleAddMusic = () => {
+  addMusic.value = !addMusic.value;
+};
 
-const playAudio = async () => {
-  let response = await axios.get('/api/audio_link');
-  audioSource.value = response.data.message;
-  console.log(audioSource.value);
-  audioPlayer.value.load();
-  audioPlayer.value.play();
+const link_object = ref(null);
+const router = useRouter();
+const items = ref([
+  {
+    text: 'Videolar',
+    path: '/videos'
+  },
+  {
+    text: 'Klasörler',
+    path: '/videos/folders'
+  }
+]);
+const switchPage = index => {
+  let element = document.querySelector('.links');
+  let link = event.target;
+  let linkWidth = link.offsetWidth;
+  element.style.setProperty('--after-width', `${linkWidth}px`);
+  let element_rect = element.getBoundingClientRect();
+  let link_rect = link.getBoundingClientRect();
+  let leftValue = link_rect.left - element_rect.left;
+  element.style.setProperty('--after-left', `${leftValue}px`);
 };
-const fetchData = async () => {
-  const link = 'https://www.youtube.com/watch?v=QvqjVCWT_4g';
-  let response = await $fetch(`/api/audio_data?url=${link}`);
-  console.log(response);
-};
+onMounted(async () => {
+  setTimeout(() => {
+    let route = router.currentRoute.value;
+    link_object.value.forEach((link, index) => {
+      if (items.value[index].path === route.path) {
+        let element = document.querySelector('.links');
+        let element_rect = element.getBoundingClientRect();
+        let link_rect = link.getBoundingClientRect();
+        let leftValue = link_rect.left - element_rect.left;
+        element.style.setProperty('--after-width', `${link_rect.right - link_rect.left}px`);
+        element.style.setProperty('--after-left', `${leftValue}px`);
+      }
+    });
+  }, 1000);
+});
 </script>
+<style scoped>
+.background-enter-active,
+.background-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.background-enter-from,
+.background-leave-to {
+  opacity: 0;
+}
+.links {
+  position: relative;
+}
+.links::after {
+  transition: all 0.5s;
+  content: '';
+  position: absolute;
+  height: 2px;
+  top: 100%;
+  left: var(--after-left, 0);
+  width: var(--after-width, 0);
+  border-top: 2px solid rgb(0, 194, 104);
+  transform: translateY(0px);
+}
+</style>

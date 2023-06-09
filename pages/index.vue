@@ -16,16 +16,16 @@
             </div>
             <!-- Checkbox -->
             <div class="absolute top-1 left-1 icons cursor-pointer">
-              <font-awesome :icon="['fas', 'square-check']" />
+              <ClientOnly> <font-awesome :icon="['fas', 'square-check']" /></ClientOnly>
             </div>
             <!-- Play Button -->
             <div class="absolute bottom-1 left-2 icons cursor-pointer">
-              <font-awesome :icon="['fas', 'play']"></font-awesome>
+              <ClientOnly> <font-awesome :icon="['fas', 'play']"></font-awesome></ClientOnly>
             </div>
 
             <!-- More Options Button -->
             <div class="absolute bottom-1 right-2 icons cursor-pointer">
-              <font-awesome :icon="['fas', 'ellipsis']" />
+              <ClientOnly> <font-awesome :icon="['fas', 'ellipsis']" /></ClientOnly>
             </div>
           </div>
 

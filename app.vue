@@ -1,12 +1,30 @@
 <template>
-  <NuxtLayout name="default">
-    <NuxtPage></NuxtPage>
-  </NuxtLayout>
+  <transition name="loading" mode="out-in">
+    <div v-if="loading" class="fixed top-0 left-0 w-full h-full flex justify-center items-center text-white">
+      <client-only>
+        <Vue3Lottie :animationData="loadingJSON" :autoPlay="true" :height="200" :width="200" />
+      </client-only>
+    </div>
+  </transition>
+  <Transition name="loading" mode="out-in">
+    <NuxtLayout v-if="!loading" name="default">
+      <NuxtPage :keepalive="{}"></NuxtPage>
+    </NuxtLayout>
+  </Transition>
 </template>
 <script setup>
+import 'vue3-lottie/dist/style.css';
+import { onMounted, ref } from 'vue';
 import '@/assets/css/fonts.css';
+import '@/assets/css/loading.css';
+import loadingJSON from '@/assets/animations/loading.json';
+const loading = ref(true);
+onMounted(() => {
+  setTimeout(() => {
+    loading.value = false;
+  }, 3000);
+});
 </script>
-
 <style>
 .font_1 {
   font-family: Verdana, Geneva, Tahoma, sans-serif;

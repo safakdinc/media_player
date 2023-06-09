@@ -5,21 +5,15 @@
       class="w-8 h-full flex items-center justify-center cursor-pointer hover:text-orange-400"
       style="transition: color 0.2s ease"
       @click="muteAudio">
-      <font-awesome v-if="volumeValue == 0" :icon="['fas', 'volume-xmark']" />
-      <font-awesome v-else-if="audioMuted" :icon="['fas', 'volume-xmark']" />
-      <font-awesome v-else-if="volumeValue > 0 && volumeValue < 50" :icon="['fas', 'volume-low']" />
-      <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']" />
+      <ClientOnly>
+        <font-awesome v-if="volumeValue == 0" :icon="['fas', 'volume-xmark']" />
+        <font-awesome v-else-if="audioMuted" :icon="['fas', 'volume-xmark']" />
+        <font-awesome v-else-if="volumeValue > 0 && volumeValue < 50" :icon="['fas', 'volume-low']" />
+        <font-awesome v-else-if="volumeValue >= 50" :icon="['fas', 'volume-high']"
+      /></ClientOnly>
     </div>
     <div class="h-full w-64 flex items-center volumeSlider">
-      <input
-        v-model="volumeValue"
-        type="range"
-        min="0"
-        max="100"
-        @input="setVolume"
-        class="w-full h-full"
-        id="position"
-        name="position" />
+      <input v-model="volumeValue" type="range" min="0" max="100" @input="setVolume" class="w-full h-full" id="position" name="position" />
     </div>
     <div class="text-sm w-7 flex justify-center">{{ volumeValue }}</div>
   </div>

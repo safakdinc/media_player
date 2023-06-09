@@ -1,0 +1,17 @@
+.loading-leave-active,
+.loading-enter-active {
+  transition: all 0.5s;
+}
+.loading-leave-from {
+  transform: scale(1);
+}
+.loading-leave-to {
+  transform: scale(0);
+}
+
+.loading-enter-from {
+  transform: scale(0);
+}
+.loading-enter-to {
+  transform: scale(1);
+}
