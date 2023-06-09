@@ -116,7 +116,9 @@ import 'vue3-lottie/dist/style.css';
 import { useStore } from 'vuex';
 
 const store = useStore();
-store.dispatch('getTracksData');
+onMounted(() => {
+  store.dispatch('getTracksData');
+});
 const audioSource = ref(store.state.playingNow);
 const thumbnail = ref(store.state.playingNowthumbnail);
 const title = ref(store.state.playingNow.title);

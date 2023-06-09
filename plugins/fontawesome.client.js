@@ -16,9 +16,11 @@ import {
   faMusic,
   faVideo
 } from '@fortawesome/free-solid-svg-icons';
+import { faSquare } from '@fortawesome/free-regular-svg-icons';
 
 library.add(
   faSquareCheck,
+  faSquare,
   faPlay,
   faEllipsis,
   faShuffle,
