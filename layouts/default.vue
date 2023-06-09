@@ -87,7 +87,6 @@
                 /></ClientOnly>
               </PopoverButton>
               <transition
-                @enter="setVolume_enter"
                 enter-active-class="transition duration-200 ease-out"
                 enter-from-class="translate-y-10 opacity-0"
                 enter-to-class="translate-y-0 opacity-100"
@@ -95,7 +94,7 @@
                 leave-from-class="translate-y-0 opacity-100"
                 leave-to-class="translate-y-10 opacity-0">
                 <PopoverPanel class="h-8 bg-gray-800 p-3 rounded-md flex items-center absolute bottom-14 right-0 z-10">
-                  <AudioSlider :volume="volumeValue" :player="player" @setVolume="setVolume" @muteAudio="muteAudio"></AudioSlider>
+                  <AudioSlider v-model="volumeValue" :audio-muted="audioMuted" @toggleAudio="muteAudio"></AudioSlider>
                 </PopoverPanel>
               </transition>
             </Popover>
@@ -110,7 +109,6 @@
 <script setup>
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
-import { Vue3Lottie } from 'vue3-lottie';
 import 'vue3-lottie/dist/style.css';
 
 import { useStore } from 'vuex';
@@ -119,9 +117,11 @@ const store = useStore();
 onMounted(() => {
   store.dispatch('getTracksData');
 });
+
 const audioSource = ref(store.state.playingNow);
 const thumbnail = ref(store.state.playingNowthumbnail);
 const title = ref(store.state.playingNow.title);
+
 watch(
   () => store.state.playingNow,
   async newPlayingNow => {
@@ -177,18 +177,18 @@ const audioLoaded = ref(true);
 const isPlaying = ref(false);
 let listenerActive = false;
 const player = ref(null);
-
 const updateTime = value => {
   playbackTime.value = value;
 };
 
-const setVolume = volume => {
-  let audio = player.value;
-  volumeValue.value = volume;
-  audioMuted.value = false;
-  audio.muted = false;
-  audio.volume = volume / 100;
-};
+watch(
+  () => volumeValue.value,
+  newVolume => {
+    let audio = player.value;
+    audioMuted.value = false;
+    audio.volume = newVolume / 100;
+  }
+);
 
 const muteAudio = () => {
   let audio = player.value;

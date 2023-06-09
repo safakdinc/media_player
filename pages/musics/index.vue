@@ -1,6 +1,5 @@
 <template>
   <div class="w-full">
-    <button @click="add">add</button> <button @click="remove">remove</button>
     <TransitionGroup tag="div" class="flex flex-col gap-5 p-2" name="list">
       <div v-for="(item, index) in tracksData" :key="item.index" class="relative" @click="playAudio(item.index, item.link)">
         <div class="absolute top-0 left-0 w-full h-full">

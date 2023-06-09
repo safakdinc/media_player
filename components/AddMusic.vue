@@ -42,12 +42,10 @@
 <script setup>
 import { ref } from 'vue';
 import '@/assets/css/input.css';
-import moment from 'moment';
 import { storeKey, useStore } from 'vuex';
 
 const emits = defineEmits(['closeModal']);
 
-const axios = useNuxtApp().$axios;
 const store = useStore();
 
 const link = ref('');

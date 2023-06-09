@@ -1,6 +1,4 @@
 import { createStore } from 'vuex';
-import axios from 'axios';
-import moment from 'moment';
 const store = createStore({
   state() {
     return {
@@ -50,20 +48,19 @@ const store = createStore({
     //init tracks info
     async getTracksData({ commit, state }) {
       state.tracks.forEach(async (link, index) => {
-        setTimeout(async () => {
-          let response = await $fetch(`/api/audio_data?url=${link}`);
-          let duration = response.duration;
-          let title = response.title;
-          let thumbnail = response.thumbnail;
-          state.tracksData.push({
-            index: index,
-            title: title,
-            link: link,
-            thumbnail: thumbnail,
-            duration: duration
-          });
-        }, 100);
+        let response = await $fetch(`/api/audio_data?url=${link}`);
+        let duration = response.duration;
+        let title = response.title;
+        let thumbnail = response.thumbnail;
+        state.tracksData.push({
+          index: index,
+          title: title,
+          link: link,
+          thumbnail: thumbnail,
+          duration: duration
+        });
       });
+      return 'response';
     },
     async addTrackData({ commit, state }, link) {
       let response = await $fetch(`/api/audio_data?url=${link}`);

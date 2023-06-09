@@ -8,16 +8,19 @@
   </transition>
   <Transition name="loading" mode="out-in">
     <NuxtLayout v-if="!loading" name="default">
-      <NuxtPage :keepalive="{}"></NuxtPage>
+      <NuxtPage></NuxtPage>
     </NuxtLayout>
   </Transition>
 </template>
 <script setup>
 import 'vue3-lottie/dist/style.css';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import '@/assets/css/fonts.css';
 import '@/assets/css/loading.css';
 import loadingJSON from '@/assets/animations/loading.json';
+
+import { useStore } from 'vuex';
+
 const loading = ref(true);
 onMounted(() => {
   setTimeout(() => {

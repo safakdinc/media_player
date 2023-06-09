@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full h-auto flex flex-wrap gap-3 p-5 text-white">
+  <div class="w-full h-auto flex flex-wrap gap-3 text-white">
     <div class="w-full sticky flex items-center h-24 gap-5 text-[aliceblue]">
       <div class="text-4xl font-fester font-bold">Giriş</div>
     </div>
-    <div class="w-full" style="font-family: Verdana, Geneva, Tahoma, sans-serif">Son Medya</div>
+    <div style="font-family: Verdana, Geneva, Tahoma, sans-serif" class="w-full">Son Medya</div>
     <div
       v-for="(item, index) in items"
       class="h-72 w-48 flex flex-col gap-1 transition duration-200 rounded-lg p-1 hover-icons relative"
@@ -50,28 +50,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { invoke } from '@tauri-apps/api/tauri';
-onMounted(() => {
-  invoke('get_latest_tracks').then(response => {
-    console.log(response);
-  });
-  // for (let i = 0; i < 35; i++) {
-  //   invoke("add_latest_tracks", { path: `/oqwkeok/qoekwqokew${i}.mp3` }).then(
-  //     (response) => {
-  //       console.log(response);
-  //     }
-  //   );
-  // } ekleme testi
-  invoke('get_file', { path: `C:/Users/coolpc/Music/Kalimba.mp3` })
-    .then(fileData => {
-      console.log(fileData);
-      console.log(`file data => ${fileData}`);
-    })
-    .catch(error => {
-      console.log(`there is an error in getting file data => ${error}`);
-    });
-});
 
 const items = [{ value: '1' }, { value: '2' }, { value: '3' }, { value: '4  ' }];
 onMounted(() => {
@@ -115,48 +93,6 @@ function getStyle(index) {
 </script>
 
 <style scoped>
-.shadow {
-  color: #fff;
-  font-family: Arial, Helvetica, sans-serif;
-  position: relative;
-  opacity: 100%;
-}
-
-.shadow::before,
-.shadow::after {
-  content: '';
-  pointer-events: none;
-  position: absolute;
-  border-radius: 0.375rem;
-  top: -2px;
-  left: -2px;
-  --bg-size: 300%;
-  --color-one: rgb(222, 26, 26);
-  --color-two: rgb(77, 126, 211);
-  background: linear-gradient(-45deg, var(--color-one), var(--color-two), var(--color-one)) 0 0 / var(--bg-size) 100%;
-  width: calc(100% + 8px);
-  height: calc(100% + 4px);
-  z-index: -1;
-  animation: animate 30s linear infinite;
-  mix-blend-mode: difference;
-}
-
-.shadow::after {
-  filter: blur(25px);
-}
-
-@keyframes animate {
-  0% {
-    background-position: 300% 0;
-  }
-
-  100% {
-    background-position: 0 0;
-  }
-}
-.selected {
-  border: 1px solid blue;
-}
 .icons {
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
