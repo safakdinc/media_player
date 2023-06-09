@@ -125,7 +125,6 @@ const title = ref(store.state.playingNow.title);
 watch(
   () => store.state.playingNow,
   async newPlayingNow => {
-    console.log(newPlayingNow);
     audioSource.value = newPlayingNow.source;
     thumbnail.value = newPlayingNow.thumbnail;
     title.value = newPlayingNow.title;

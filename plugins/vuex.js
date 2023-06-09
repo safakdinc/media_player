@@ -12,20 +12,18 @@ const store = createStore({
       ],
       tracksData: [],
       playingNowIndex: 0,
-      playingNow: { link: '', title: '', thumbnail: '', duration: '', source: '' }
+      playingNow: { link: '', title: '', thumbnail: '', duration: '', source: '', index: null }
     };
   },
   mutations: {
     setPlayingNow(state, payload) {
+      const item = state.tracksData.find(track => track.index === payload.index);
       state.playingNowIndex = payload.index;
-      state.playingNow = state.tracksData[payload.index];
+      state.playingNow = item;
       state.playingNow.source = payload.source;
     },
     addNewTrack(state, link) {
       state.tracks.push(link);
-    },
-    addNewTrackData(state, track) {
-      state.tracksData.unshift(track);
     },
     nextTrack(state) {
       state.playingNowIndex++;
@@ -51,13 +49,14 @@ const store = createStore({
     },
     //init tracks info
     async getTracksData({ commit, state }) {
-      state.tracks.forEach(async link => {
+      state.tracks.forEach(async (link, index) => {
         setTimeout(async () => {
           let response = await $fetch(`/api/audio_data?url=${link}`);
           let duration = response.duration;
           let title = response.title;
           let thumbnail = response.thumbnail;
           state.tracksData.push({
+            index: index,
             title: title,
             link: link,
             thumbnail: thumbnail,
@@ -67,17 +66,17 @@ const store = createStore({
       });
     },
     async addTrackData({ commit, state }, link) {
-      let data = {};
       let response = await $fetch(`/api/audio_data?url=${link}`);
-      let iso8601Duration = response.duration;
-      let duration = moment.duration(iso8601Duration);
-      let title = response.data.items[0].snippet.title;
-      let thumbnail = response.data.items[0].snippet.thumbnails.maxres.url;
-      data.title = title;
-      data.link = link;
-      data.thumbnail = thumbnail;
-      data.duration = { hours: duration.hours(), minutes: duration.minutes(), seconds: duration.seconds() };
-      commit('addNewTrackData', data);
+      let duration = response.duration;
+      let title = response.title;
+      let thumbnail = response.thumbnail;
+      state.tracksData.unshift({
+        index: state.tracksData.length,
+        title: title,
+        link: link,
+        thumbnail: thumbnail,
+        duration: duration
+      });
     }
   }
 });

@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full flex flex-col gap-5 p-2">
-    <TransitionGroup name="list">
-      <div
-        v-for="(item, index) in tracksData"
-        :key="index"
-        :class="{ shadow: currentPlaying == index }"
-        @click="playAudio(index, item.link)">
+  <div class="w-full">
+    <button @click="add">add</button> <button @click="remove">remove</button>
+    <TransitionGroup tag="div" class="flex flex-col gap-5 p-2" name="list">
+      <div v-for="(item, index) in tracksData" :key="item.index" class="relative" @click="playAudio(item.index, item.link)">
+        <div class="absolute top-0 left-0 w-full h-full">
+          <div class="w-full h-full" :class="{ shadow: currentPlaying == item.index }"></div>
+        </div>
         <div
           class="w-full flex flex-wrap items-center gap-2 p-1 hover-link cursor-pointer rounded-md"
           style="border-color: rgba(197, 197, 197, 0.4)">
@@ -13,7 +13,7 @@
             <img class="w-full h-full object-center object-cover rounded-sm" :src="item.thumbnail" alt="image" />
           </div>
           <div class="w-2/5">{{ item.title }}</div>
-          <div>Bilinmeyen Albüm</div>
+          <div>Bilinmeyen Albüm {{ index }}</div>
           <div class="ml-auto">Bilinmeyen Tarz</div>
           <div class="ml-auto">
             {{ calculateDuration(item.duration) }}
@@ -33,9 +33,14 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
+const items = ref([1, 2, 3, 4, 5]);
+
 const tracksData = ref(computed(() => store.state.tracksData));
 
-const datasReady = ref(false);
+function add() {
+  console.log(tracksData.value);
+}
+
 const currentPlaying = ref(null);
 const playAudio = (index, link) => {
   store.dispatch('getTrackLink', { link: link, index: index });
@@ -44,11 +49,8 @@ watch(
   () => store.state.playingNowIndex,
   index => {
     currentPlaying.value = index;
-
-    console.log(index);
   }
 );
-const duration_ref = ref({});
 const calculateDuration = parameter => {
   const hours = Math.floor(parameter / 3600);
   const minutes = Math.floor((parameter % 3600) / 60);
@@ -71,7 +73,7 @@ const calculateDuration = parameter => {
 };
 </script>
 <style scoped>
-.list-move,
+.list-move, /* apply transition to moving elements */
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
@@ -81,9 +83,15 @@ const calculateDuration = parameter => {
   opacity: 0;
   transform: translateX(-50px);
 }
-.list-leave-active {
-  position: absolute;
+.list-leave-from,
+.list-enter-to {
+  opacity: 1;
+  transform: translateX(0px);
 }
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+
 .shadow {
   color: #fff;
   font-family: Arial, Helvetica, sans-serif;
