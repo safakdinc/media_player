@@ -17,6 +17,7 @@ import 'vue3-lottie/dist/style.css';
 import { onMounted, ref, watch } from 'vue';
 import '@/assets/css/fonts.css';
 import '@/assets/css/loading.css';
+import '@/assets/css/page-transitions.css';
 import loadingJSON from '@/assets/animations/loading.json';
 
 import { useStore } from 'vuex';

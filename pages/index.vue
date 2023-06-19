@@ -51,11 +51,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
-const items = [{ value: '1' }, { value: '2' }, { value: '3' }, { value: '4  ' }];
+const items = [{ value: '1' }, { value: '2' }, { value: '3' }, { value: '4' }];
 onMounted(() => {
-  for (let index = 0; index < 20; index++) {
-    items.push({ value: `${index}` });
-  }
   items.forEach((item, index) => {
     item.index = index;
   });

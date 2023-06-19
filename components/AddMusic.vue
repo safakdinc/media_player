@@ -15,34 +15,47 @@
           </span>
         </div>
       </div>
-      <div class="w-full flex flex-wrap" v-if="data">
-        <div class="w-full p-3">
-          {{ data.title }}
-        </div>
-        <div class="w-full p-3 relative">
-          <img class="rounded-lg" :src="data.thumbnail" />
-          <div class="absolute bottom-3 right-5">
-            <div class="flex items-center">
-              {{ calculateDuration(data.duration) }}
+      <div class="w-full" v-if="data && notFound != true">
+        <div class="w-full flex flex-wrap">
+          <div class="w-full p-3">
+            {{ data.title }}
+          </div>
+          <div class="w-full p-3 relative">
+            <img class="rounded-lg w-full h-full" :src="data.thumbnail" />
+            <div class="absolute bottom-3 right-5">
+              <div class="flex items-center">
+                {{ calculateDuration(data.duration) }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="w-full px-3 pb-3 flex items-center justify-end" v-if="data">
-        <div
-          class="py-1 rounded-lg w-20 flex justify-center items-center text-xl cursor-pointer"
-          style="background-color: rgb(40, 200, 134)"
-          @click="addTrack">
-          Ekle
+        <div class="w-full px-3 pb-3 flex items-center justify-end">
+          <div
+            v-if="data"
+            class="py-1 rounded-lg w-20 flex justify-center items-center text-xl cursor-pointer"
+            style="background-color: rgb(40, 200, 134)"
+            @click="addTrack">
+            Ekle
+          </div>
         </div>
+      </div>
+      <div v-if="notFound" class="w-full h-52 flex flex-wrap justify-center items-center content-start">
+        <div class="w-full">
+          <client-only>
+            <Vue3Lottie :animationData="notFoundJSON" :autoPlay="true" :height="100" :width="100" />
+          </client-only>
+        </div>
+        <div>Video Bulunamadı</div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
+import notFoundJSON from '@/assets/animations/notFound.json';
 import { ref } from 'vue';
 import '@/assets/css/input.css';
 import { storeKey, useStore } from 'vuex';
+import { Vue3Lottie } from 'vue3-lottie';
 
 const emits = defineEmits(['closeModal']);
 
@@ -50,14 +63,24 @@ const store = useStore();
 
 const link = ref('');
 const data = ref(null);
+const notFound = ref(null);
 const getYoutubeData = async () => {
   let url = link.value;
   try {
-    let response = await $fetch(`/api/audio_data?url=${url}`);
-    let duration = response.duration;
-    let title = response.title;
-    let thumbnail = response.thumbnail;
-    data.value = { title: title, thumbnail: thumbnail, duration: duration };
+    const { data: response } = await useFetch('/api/audio_data', {
+      params: {
+        url: url
+      }
+    });
+    let duration = response.value.duration;
+    let title = response.value.title;
+    let thumbnail = response.value.thumbnail;
+    if (title != null) {
+      data.value = { title: title, thumbnail: thumbnail, duration: duration };
+      notFound.value = false;
+    } else {
+      notFound.value = true;
+    }
   } catch (error) {
     console.log(error);
   }

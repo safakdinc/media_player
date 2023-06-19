@@ -3,7 +3,7 @@
     <TransitionGroup tag="div" class="flex flex-col gap-5 p-2" name="list">
       <div v-for="(item, index) in tracksData" :key="item.index" class="relative" @click="playAudio(item.index, item.link)">
         <div class="absolute top-0 left-0 w-full h-full">
-          <div class="w-full h-full" :class="{ shadow: currentPlaying == item.index }"></div>
+          <div class="w-full h-full opacity-0" :class="{ shadow: currentPlaying == item.index }"></div>
         </div>
         <div
           class="w-full flex flex-wrap items-center gap-2 p-1 hover-link cursor-pointer rounded-md"
@@ -32,15 +32,10 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-const items = ref([1, 2, 3, 4, 5]);
-
 const tracksData = ref(computed(() => store.state.tracksData));
 
-function add() {
-  console.log(tracksData.value);
-}
-
 const currentPlaying = ref(null);
+
 const playAudio = (index, link) => {
   store.dispatch('getTrackLink', { link: link, index: index });
 };
@@ -72,6 +67,27 @@ const calculateDuration = parameter => {
 };
 </script>
 <style scoped>
+.music-enter-active,
+.music-leave-active {
+  transition: 1s ease;
+}
+.music-enter-from {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.music-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+.music-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.music-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+
 .list-move, /* apply transition to moving elements */
 .list-enter-active,
 .list-leave-active {
@@ -97,6 +113,8 @@ const calculateDuration = parameter => {
   position: relative;
   opacity: 100%;
   box-shadow: none;
+  opacity: 1;
+  transition: 0.5s ease;
 }
 
 .shadow::before {

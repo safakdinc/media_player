@@ -9,6 +9,7 @@
               {{ item.text }}
             </div>
           </nuxt-link>
+          <button @click="deneme">Deneme</button>
         </div>
         <div class="flex-grow flex justify-end pr-3">
           <div
@@ -31,7 +32,7 @@
       <Transition name="background">
         <div v-if="addMusic" class="fixed w-full h-full top-0 left-0 z-20 pointer-events-none flex items-center justify-center">
           <div class="pointer-events-auto">
-            <AddMusic :keepalive="{}" @close-modal="closeModal"></AddMusic>
+            <AddMusic :keepalive="{}" @close-modal="toggleAddMusic"></AddMusic>
           </div>
         </div>
       </Transition>
@@ -40,30 +41,74 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, onBeforeMount } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
-const closeModal = () => {
-  addMusic.value = false;
-};
+const router = useRouter();
 
+async function deneme() {
+  const { data, error } = await useFetch('/api/deneme', {
+    params: { deneme: 'deneme' }
+  });
+  console.log(toRaw(data.value));
+}
+
+/*const pageTransition = ref('page');
+
+
+
+onMounted(() => {
+  pageTransition.value = 'page';
+});
+
+watch(
+  () => router.currentRoute.value.path,
+  (newValue, oldValue) => {
+    console.log(computePageNumber(oldValue), computePageNumber(newValue));
+    if (computePageNumber(oldValue) == null || computePageNumber(newValue) == null) {
+      pageTransition.value = 'page';
+    } else {
+      if (computePageNumber(oldValue) < computePageNumber(newValue)) {
+        pageTransition.value = 'slide-left';
+      }
+      if (computePageNumber(oldValue) > computePageNumber(newValue)) {
+        pageTransition.value = 'slide-right';
+      }
+    }
+  }
+);
+
+function computePageNumber(path) {
+  let matchedValue = null;
+  items.value.forEach(item => {
+    if (item.path === path) {
+      matchedValue = item.value;
+    }
+  });
+
+  return matchedValue;
+}
+*/
 const addMusic = ref(false);
 const toggleAddMusic = () => {
   addMusic.value = !addMusic.value;
 };
 
 const link_object = ref(null);
-const router = useRouter();
+
 const items = ref([
   {
+    value: 1,
     text: 'Müzikler',
     path: '/musics'
   },
   {
+    value: 2,
     text: 'Albümler',
     path: '/musics/albums'
   },
   {
+    value: 3,
     text: 'Sanatçılar',
     path: '/musics/artists'
   }

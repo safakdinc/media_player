@@ -59,7 +59,6 @@ const selectorOn = ref(false);
 const scrollToLetter = item => {
   selectorOn.value = false;
   let element = document.getElementById(item);
-  const offset = 200; // Adjust this value as needed
 
   element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'start' });
 };

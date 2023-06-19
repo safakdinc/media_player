@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  devtools: { enabled: true },
   app: {
     head: {
       title: 'Nuxt 3 Portfolio',
@@ -18,7 +19,7 @@ export default defineNuxtConfig({
     '@nuxtjs/vuex'
   ],
 
-  modules: ['@vueuse/motion/nuxt', 'nuxt-headlessui', '@nuxt/devtools', '@nuxtjs/fontaine'],
+  modules: ['@vueuse/motion/nuxt', 'nuxt-headlessui', '@nuxtjs/fontaine', '@hypernym/nuxt-anime'],
 
   headlessui: {
     prefix: 'Headless'

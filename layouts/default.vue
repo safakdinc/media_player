@@ -1,7 +1,7 @@
 <template>
   <div class="w-full body flex flex-col fixed top-0 left-0 h-full">
     <div class="flex-1 flex overflow-y-auto">
-      <div class="w-12 lg:w-[20%] xl:w-[17%] h-full sticky top-0 left-0 background flex flex-col flex-shrink-0 z-10" ref="sideNav">
+      <div class="w-12 lg:w-[20%] xl:w-[17%] h-full sticky top-0 left-0 background flex flex-col flex-shrink-0" ref="sideNav">
         <SideNav></SideNav>
       </div>
       <!-- Main Content -->
@@ -15,8 +15,8 @@
       <div class="flex-grow flex justify-start">
         <!-- Name and thumbnail -->
         <div class="flex-grow flex gap-2 flex-1">
-          <div class="h-full w-32">
-            <img v-if="thumbnail" class="w-full h-full object-cover object-center rounded-md" :src="thumbnail" />
+          <div class="h-full w-32 cursor-pointer" @click="animateThumbnail">
+            <Thumbnail :src="thumbnail"></Thumbnail>
           </div>
           <div class="h-full w-full flex items-center p-2 text-white">{{ title }}</div>
         </div>
@@ -114,6 +114,7 @@ import 'vue3-lottie/dist/style.css';
 import { useStore } from 'vuex';
 
 const store = useStore();
+
 onMounted(() => {
   store.dispatch('getTracksData');
 });

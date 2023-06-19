@@ -51,6 +51,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+
 const items = [
   {
     name: 'Albüm 1',

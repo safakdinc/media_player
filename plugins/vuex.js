@@ -42,16 +42,24 @@ const store = createStore({
   },
   actions: {
     async getTrackLink({ commit, state }, payload) {
-      const response = await $fetch('/api/audio_link?url=' + payload.link);
-      commit('setPlayingNow', { source: response.data, index: payload.index });
+      const { data: response } = await useFetch('/api/audio_link', {
+        params: {
+          url: payload.link
+        }
+      });
+      commit('setPlayingNow', { source: response.value.data, index: payload.index });
     },
     //init tracks info
-    async getTracksData({ commit, state }) {
+    async getTracksData({ commit, dispatch, state }) {
       state.tracks.forEach(async (link, index) => {
-        let response = await $fetch(`/api/audio_data?url=${link}`);
-        let duration = response.duration;
-        let title = response.title;
-        let thumbnail = response.thumbnail;
+        const { data: response } = await useFetch(`/api/audio_data`, {
+          params: {
+            url: link
+          }
+        });
+        let duration = response.value.duration;
+        let title = response.value.title;
+        let thumbnail = response.value.thumbnail;
         state.tracksData.push({
           index: index,
           title: title,
@@ -60,13 +68,16 @@ const store = createStore({
           duration: duration
         });
       });
-      return 'response';
     },
     async addTrackData({ commit, state }, link) {
-      let response = await $fetch(`/api/audio_data?url=${link}`);
-      let duration = response.duration;
-      let title = response.title;
-      let thumbnail = response.thumbnail;
+      const { data: response, error } = await useFetch(`/api/audio_data`, {
+        params: {
+          url: link
+        }
+      });
+      let duration = response.value.duration;
+      let title = response.value.title;
+      let thumbnail = response.value.thumbnail;
       state.tracksData.unshift({
         index: state.tracksData.length,
         title: title,
